@@ -13,167 +13,451 @@
   body{
     margin:0;
     font-family: "Comic Sans MS","Microsoft JhengHei",sans-serif;
-    background: radial-gradient(1200px 600px at 10% 10%, rgba(255,220,235,0.35), transparent 10%),
-                radial-gradient(900px 500px at 90% 90%, rgba(230,245,255,0.5), transparent 12%),
-                linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
-    background-size:400% 400%;
-    animation:bgShift 18s ease-in-out infinite;
     color:#5a2b3a;
     overflow:hidden;
     -webkit-font-smoothing:antialiased;
+    background: radial-gradient(1200px 600px at 8% 12%, rgba(255,220,235,0.38), transparent 8%),
+                radial-gradient(900px 500px at 92% 88%, rgba(220,245,255,0.48), transparent 12%),
+                linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+    background-size: 300% 300%;
+    animation: bgFloat 20s ease-in-out infinite;
   }
-  @keyframes bgShift{ 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+  @keyframes bgFloat{ 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
-  .wrap{width:100%; max-width:820px; margin:28px auto; text-align:center; position:relative; z-index:20;}
-  h1{ margin:0 0 10px; font-size:2.2rem; background:linear-gradient(90deg,#ff6aa6,#ff8ecb,#ffd9f0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:0.6px; }
-  .subtitle{margin-top:6px;color:#a04a6b; opacity:0.9;}
+  .wrap{width:100%;max-width:1000px;margin:28px auto;text-align:center;position:relative;z-index:40;padding-bottom:120px;}
+  h1{ margin:0 0 8px; font-size:2.2rem; background:linear-gradient(90deg,#ff6aa6,#ff8ecb,#ffd9f0); -webkit-background-clip:text; -webkit-text-fill-color:transparent;}
+  .subtitle{ margin-top:6px;color:#9b5074; opacity:0.95; font-size:0.98rem;}
 
-  .scene{position:relative; padding:32px 10px 80px;}
-  .cake{ width:300px; max-width:86%; margin:26px auto; position:relative; cursor:pointer; transform-origin:center bottom; transition: transform .18s ease; filter: drop-shadow(0 18px 28px rgba(200,120,160,0.12)); }
-  .cake.pop { transform: translateY(-6px) scale(1.02); }
-  .msg { margin-top:10px; font-size:1.1rem; color:#b24f76; opacity:0.95; text-shadow:0 2px 6px rgba(255,200,220,0.35); }
+  /* scene */
+  .scene{ position:relative; padding:30px 10px 120px; }
 
-  .falling { position:fixed; top:-140px; width:52px; height:auto; pointer-events:none; z-index:12; transform-origin:center; animation: fall linear forwards; will-change: transform, opacity; }
-  @keyframes fall{ 0%{ transform: translateY(0) rotate(0deg); opacity:1; } 70%{ transform: translateY(78vh) rotate(200deg); opacity:1; } 100%{ transform: translateY(105vh) rotate(360deg); opacity:0.95; } }
+  /* cake (3D-ish) */
+  .cake{
+    width:320px; max-width:86%; margin:28px auto; position:relative; cursor:pointer;
+    transform-origin:center bottom;
+    transition: transform .18s ease, box-shadow .25s ease;
+    will-change: transform;
+  }
+  .cake::after{
+    content:""; position:absolute; left:50%; bottom:-12px; transform:translateX(-50%); width:70%; height:18px; background: radial-gradient(60% 60% at 50% 40%, rgba(255,200,230,0.35), transparent 55%); filter: blur(10px); z-index:-1;
+  }
+  .cake.hover{ transform: translateY(-6px) rotateX(6deg) scale(1.02); box-shadow: 0 28px 44px rgba(180,100,150,0.12); }
+  .cake.super{ transform: translateY(-16px) rotateX(6deg) scale(1.22); box-shadow: 0 48px 84px rgba(180,100,150,0.16); }
 
-  .particle{ position:fixed; pointer-events:none; font-size:18px; user-select:none; animation: particleUp .95s cubic-bezier(.2,.9,.2,1) forwards; z-index:40; font-weight:700; }
-  @keyframes particleUp{ 0%{ transform: translateY(0) scale(1); opacity:1; } 100%{ transform: translateY(-84px) scale(.6); opacity:0; } }
+  /* glow behind cake */
+  .glow{ position:absolute; left:50%; top:8px; transform:translateX(-50%); width:320px; height:98px; background:radial-gradient(circle at 50% 10%, rgba(255,220,235,0.95), rgba(200,230,255,0.2) 40%, transparent 60%); border-radius:50%; filter:blur(20px); z-index:30; pointer-events:none; opacity:.9; }
 
-  .spark{ position:fixed; width:6px;height:6px;border-radius:50%; background:linear-gradient(180deg,#fff,#ffe0f0); filter:blur(.2px); opacity:.9; pointer-events:none; z-index:6; animation: tw 2.6s ease-in-out infinite; }
-  @keyframes tw{ 0%{transform:scale(.7);opacity:.25;} 50%{transform:scale(1.4);opacity:1;} 100%{transform:scale(.8);opacity:.3;} }
+  /* owner badge */
+  .ownerBadge{ position:absolute; right:-6px; top:-6px; background:linear-gradient(90deg,#fff,#ffe8f1); border:1px solid rgba(255,120,160,0.22); color:#8f4663; padding:6px 8px; border-radius:12px; font-size:12px; box-shadow:0 6px 14px rgba(200,120,160,0.06); z-index:45; }
 
-  .cake.super{ transform:translateY(-10px) scale(1.18); filter: drop-shadow(0 34px 44px rgba(200,120,160,0.18)); transition: transform .35s cubic-bezier(.2,.9,.2,1), filter .35s; }
-  .firework{ position:fixed; width:6px; height:6px; border-radius:50%; pointer-events:none; z-index:50; animation: fw 900ms linear forwards; }
-  @keyframes fw{ 0%{ transform: translateY(0) scale(1); opacity:1; } 100%{ transform: translateY(-180px) translateX(120px) scale(.6); opacity:0; } }
+  /* falling strawberry (with glow tail) */
+  .falling {
+    position:fixed; top:-160px; width:56px; height:auto; pointer-events:none; z-index:26;
+    transform-origin:center;
+    filter: drop-shadow(0 8px 12px rgba(200,120,150,0.16));
+    animation: fall linear forwards;
+  }
+  @keyframes fall {
+    0%{ transform: translate3d(0,-0vh,0) rotate(0deg); opacity:1; }
+    65%{ transform: translate3d(var(--sx,0),70vh,0) rotate(200deg); opacity:1; }
+    100%{ transform: translate3d(calc(var(--sx,0) - 14px),105vh,0) rotate(360deg); opacity:0.96; }
+  }
+  /* horizontal sway added by CSS animation */
+  @keyframes sway {
+    0%{ transform: translateX(0); }
+    50%{ transform: translateX(18px); }
+    100%{ transform: translateX(0); }
+  }
 
-  .glow{ position:absolute; left:50%; top:16px; transform:translateX(-50%); width:240px; height:84px; pointer-events:none; background: radial-gradient(50% 40% at 50% 10%, rgba(255,220,235,0.85), transparent 40%); border-radius:50%; filter:blur(12px); z-index:25; opacity:.85; }
+  /* particle (emoji / QQ phrase) */
+  .particle{
+    position:fixed; pointer-events:none; font-weight:700; z-index:60;
+    animation: particleUp .95s cubic-bezier(.2,.9,.2,1) forwards;
+    text-shadow:0 3px 12px rgba(255,200,220,0.45);
+  }
+  @keyframes particleUp{ 0%{ transform: translateY(0) scale(1); opacity:1 } 100%{ transform: translateY(-90px) scale(.6); opacity:0 } }
 
-  .ownerBadge{ position:absolute; right:-6px; top:-6px; background:linear-gradient(90deg,#fff,#ffe8f1); border:1px solid rgba(255,120,160,0.22); color:#8f4663; padding:6px 8px; border-radius:12px; font-size:12px; box-shadow:0 6px 14px rgba(200,120,160,0.06); }
+  /* sparkle dots */
+  .spark{ position:fixed; width:6px; height:6px; border-radius:50%; background:linear-gradient(180deg,#fff,#ffe0f0); opacity:.9; filter: blur(.2px); pointer-events:none; z-index:18; animation: twinkle 2.6s ease-in-out infinite; }
+  @keyframes twinkle{ 0%{transform:scale(.7);opacity:.25;} 50%{transform:scale(1.3);opacity:1;} 100%{transform:scale(.8);opacity:.3;} }
 
-  /* small input pill (hidden by default) */
-  .pill{ position:fixed; left:12px; bottom:12px; background:rgba(255,255,255,0.95); padding:8px 10px; border-radius:999px; box-shadow:0 6px 18px rgba(40,20,30,0.08); font-size:13px; }
+  /* fireworks particle (tiny) */
+  .fw{ position:fixed; width:8px; height:8px; border-radius:50%; pointer-events:none; z-index:80; transform:translate(-4px,-4px); will-change: transform, opacity; }
 
-  @media (max-width:520px){ .cake{ width:220px; } .particle{ font-size:16px; } .glow{ width:180px; height:64px; top:14px; } }
+  /* small UI pill */
+  .pill{ position:fixed; left:12px; bottom:14px; background:rgba(255,255,255,0.95); padding:8px 12px; border-radius:999px; box-shadow:0 8px 20px rgba(30,10,20,0.08); font-size:13px; z-index:70; }
+
+  @media (max-width:520px){
+    .cake{ width:220px; }
+    .glow{ width:220px; height:72px; top:6px; filter:blur(16px); }
+  }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>🍓 澳大第一草莓蛋糕</h1>
-    <div class="subtitle">輕輕點一下蛋糕，會有小驚喜 ✨</div>
+    <h1>🍓 澳大第一士多啤梨蛋糕(限時)</h1>
+    <div class="subtitle" id="subtitle">輕輕點蛋糕，會有超可愛的小驚喜 ✨</div>
 
     <div class="scene" id="scene">
       <div class="glow" id="glow" aria-hidden="true"></div>
 
       <div class="cake" id="cake" role="img" aria-label="草莓蛋糕">
-        <svg viewBox="0 0 260 160" width="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+        <!-- 立體感更好的 SVG（保留簡潔） -->
+        <svg viewBox="0 0 300 180" width="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#fff1f6"/><stop offset="1" stop-color="#fff6fb"/></linearGradient>
             <linearGradient id="cakeFill" x1="0" x2="1"><stop offset="0" stop-color="#ffdfe7"/><stop offset="1" stop-color="#ffe7ef"/></linearGradient>
-            <radialGradient id="shine" cx="30%" cy="20%" r="50%"><stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+            <linearGradient id="cream" x1="0" x2="1"><stop offset="0" stop-color="#fff7fb"/><stop offset="1" stop-color="#fff1f6"/></linearGradient>
+            <radialGradient id="shine" cx="30%" cy="20%" r="50%"><stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+            <filter id="softBlur"><feGaussianBlur stdDeviation="6" result="b"/></filter>
           </defs>
 
-          <ellipse cx="130" cy="142" rx="92" ry="12" fill="#fff7f9" stroke="#ffdbe8" />
-          <rect x="40" y="68" rx="16" ry="16" width="180" height="62" fill="url(#cakeFill)" stroke="#ffbed1" />
-          <path d="M40 74 Q68 40 100 74 T180 74 T220 74 L220 84 Q176 110 130 86 T100 86 T40 86 Z" fill="url(#g1)" opacity=".98"/>
-          <ellipse cx="130" cy="56" rx="70" ry="36" fill="url(#g1)" stroke="#ffdfe8" />
-          <ellipse cx="98" cy="44" rx="18" ry="8" fill="url(#shine)" opacity=".6"/>
+          <ellipse cx="150" cy="160" rx="110" ry="14" fill="#fff7f9" stroke="#ffdbe8" />
+          <rect x="50" y="78" rx="20" ry="20" width="200" height="74" fill="url(#cakeFill)" stroke="#ffbed1"/>
+          <path d="M50 84 Q86 46 120 84 T190 84 T250 84 L250 94 Q200 126 150 98 T120 98 T50 98 Z" fill="url(#cream)" opacity="0.98"/>
+          <ellipse cx="150" cy="58" rx="84" ry="42" fill="url(#cream)" stroke="#ffdfe8"/>
+          <ellipse cx="115" cy="46" rx="20" ry="9" fill="url(#shine)" opacity=".6"/>
 
-          <g transform="translate(70,34) scale(.9)"><ellipse cx="0" cy="0" rx="12" ry="16" fill="#ff3b55"/><path d="M-9 -10 C -11 -16, 11 -16, 9 -10" fill="#2fb64a"/></g>
-          <g transform="translate(130,28) scale(1)"><ellipse cx="0" cy="0" rx="14" ry="19" fill="#ff3b55"/><path d="M-10 -11 C -13 -18, 13 -18, 10 -11" fill="#32b64a"/></g>
-          <g transform="translate(190,38) scale(.85)"><ellipse cx="0" cy="0" rx="11" ry="14" fill="#ff3b55"/><path d="M-8 -9 C -11 -14, 11 -14, 8 -9" fill="#39b64a"/></g>
+          <!-- strawberries -->
+          <g transform="translate(88,44) scale(.95)"><ellipse cx="0" cy="0" rx="14" ry="18" fill="#ff3b55"/><path d="M-10 -10 C -13 -17, 13 -17, 10 -10" fill="#33b64a"/></g>
+          <g transform="translate(150,36) scale(1)"><ellipse cx="0" cy="0" rx="16" ry="21" fill="#ff3b55"/><path d="M-12 -12 C -16 -20, 16 -20, 12 -12" fill="#2fb64a"/></g>
+          <g transform="translate(210,48) scale(.86)"><ellipse cx="0" cy="0" rx="13" ry="16" fill="#ff3b55"/><path d="M-9 -9 C -12 -14, 12 -14, 9 -9" fill="#39b64a"/></g>
         </svg>
+
         <div class="ownerBadge" id="ownerBadge" style="display:none;"></div>
       </div>
 
-      <div class="msg" id="msg">輕點蛋糕，收集小驚喜 ✨</div>
+      <div class="msg" id="msg" style="margin-top:8px;color:#8f476f;font-weight:600;">輕點蛋糕，收集驚喜 ✨</div>
     </div>
-
   </div>
 
-<script>
-/* ---------------------------
-   QQ-style 可愛文字與 emoji 列表（不表白）
-----------------------------*/
-const qqPhrases = [
-  "好Q～ (´▽｀)", "Q_Q 好可愛", "好Q好想咬一口～", "ˊᵕˋ 好治癒", "哇～好夢幻 o(≧▽≦)o", "好想偷吃一口 QwQ",
-  "超可愛～ʕ•ᴥ•ʔ", "好少女心～", "萌到冒泡～", "好想一起吃🍰"
-];
-const emojis = ["🍓","✨","🍬","🌸","🍪"];
+  <!-- container for shooting stars (z-index behind main elements) -->
+  <div id="sky" style="position:fixed;inset:0;pointer-events:none;z-index:10;"></div>
 
-/* personalization via URL param: ?to=小名 */
-function getParam(name){
-  try{ const u = new URL(location.href); return u.searchParams.get(name); }catch(e){ return null; }
+<script>
+/* ----------------------
+  Utilities & personalization (case-insensitive to=)
+------------------------*/
+function getToName(){
+  try{
+    const params = new URLSearchParams(window.location.search);
+    for(const [k,v] of params.entries()){
+      if(k.toLowerCase() === 'to'){
+        return decodeURIComponent(v);
+      }
+    }
+  }catch(e){}
+  return null;
 }
-const toName = getParam('to');
+const toName = getToName();
 if(toName){
-  const badge = document.getElementById('ownerBadge');
-  badge.textContent = `特別為 ${toName} 準備`;
-  badge.style.display = 'block';
+  document.getElementById('ownerBadge').textContent = `特別為 ${toName} 準備`;
+  document.getElementById('ownerBadge').style.display = 'block';
   document.getElementById('msg').textContent = `輕點給 ${toName} 的小驚喜 ✨`;
 }
 
-/* audio lightly (disabled until user interacts) */
-let audioReady=false;
-function playTiny(freq,dur=0.05){ try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); const o=ctx.createOscillator(); const g=ctx.createGain(); o.type='sine'; o.frequency.value=freq; g.gain.value=0.02; o.connect(g); g.connect(ctx.destination); o.start(); setTimeout(()=>{ o.stop(); ctx.close(); }, dur*1000);}catch(e){} }
+/* QQ-style phrases & emojis (non-romantic) */
+const QQ = [
+  "好Q～ (´▽｀)","Q_Q 好可愛","好Q好想咬一口～","ˊᵕˋ 好治癒","哇～好夢幻 o(≧▽≦)o",
+  "好想偷吃一口 QwQ","超可愛～ʕ•ᴥ•ʔ","好少女心～","萌到冒泡～","好想一起吃🍰"
+];
+const EMO = ["🍓","✨","🍬","🌸","🍪","🍭"];
 
-/* strawberry SVG */
-const strawberrySVG = `<svg viewBox="0 0 50 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="25" cy="30" rx="18" ry="22" fill="#ff3b55"/><path d="M25 10 C 18 14, 8 10, 12 6 C 6 8, 6 14, 14 12 C 10 18, 18 20, 25 14 C 32 20, 40 18, 36 12 C 44 14, 44 8, 38 6 C 42 10, 32 14, 25 10 Z" fill="#29b84a"/><ellipse cx="17" cy="18" rx="3" ry="5" fill="#fff" opacity="0.22"/></svg>`;
+/* Audio helper (only init after user gesture) */
+let audioPrimed = false;
+function tinyBeep(freq=680,dur=0.05){
+  try{
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = freq;
+    g.gain.value = 0.02;
+    o.connect(g); g.connect(ctx.destination);
+    o.start();
+    setTimeout(()=>{ o.stop(); ctx.close(); }, dur*1000);
+  }catch(e){}
+}
 
-const activeSet = new Set();
+/* ----------------------
+  Background: static sparkles + occasional shooting stars
+------------------------*/
+(function createSparkles(){
+  for(let i=0;i<28;i++){
+    const s = document.createElement('div');
+    s.className = 'spark';
+    s.style.left = (Math.random()*100)+'vw';
+    s.style.top = (Math.random()*100)+'vh';
+    s.style.opacity = (0.2+Math.random()*0.8);
+    s.style.width = s.style.height = (3 + Math.random()*6) + 'px';
+    s.style.animationDuration = (1.6 + Math.random()*2.6) + 's';
+    document.body.appendChild(s);
+  }
+})();
+
+function spawnShootingStar(){
+  const sky = document.getElementById('sky');
+  const star = document.createElement('div');
+  star.style.position='absolute';
+  star.style.height='3px';
+  star.style.width = (120 + Math.random()*180) + 'px';
+  star.style.background = 'linear-gradient(90deg, rgba(255,255,255,0.95), rgba(255,200,230,0.6), rgba(255,255,255,0.0))';
+  star.style.left = (-200 + Math.random()*20) + 'vw';
+  const top = (6 + Math.random()*40);
+  star.style.top = top + 'vh';
+  star.style.transform = 'rotate(-12deg)';
+  star.style.opacity = '0';
+  star.style.filter = 'blur(1px) drop-shadow(0 2px 6px rgba(255,200,220,0.4))';
+  star.style.zIndex = 12;
+  sky.appendChild(star);
+  // animate via JS
+  const duration = 900 + Math.random()*700;
+  const start = performance.now();
+  star.style.opacity = '1';
+  function frame(t){
+    const p = (t - start)/duration;
+    if(p >= 1){ star.remove(); return; }
+    // move across to right
+    const vw = window.innerWidth;
+    star.style.left = ((-200 + p*350) + Math.random()*4) + 'vw'; // gentle variation
+    star.style.opacity = String(1 - p);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+// randomly spawn shooting stars
+setInterval(()=>{ if(Math.random() < 0.28) spawnShootingStar(); }, 1400);
+
+/* ----------------------
+  Strawberries rain (with sway & glow tail)
+------------------------*/
+const strawberrySVG = `<svg viewBox="0 0 50 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <ellipse cx="25" cy="30" rx="18" ry="22" fill="#ff3b55"/>
+  <path d="M25 10 C 18 14, 8 10, 12 6 C 6 8, 6 14, 14 12 C 10 18, 18 20, 25 14 C 32 20, 40 18, 36 12 C 44 14, 44 8, 38 6 C 42 10, 32 14, 25 10 Z" fill="#29b84a"/>
+  <ellipse cx="17" cy="18" rx="3" ry="5" fill="#fff" opacity="0.22"/>
+</svg>`;
+
+const activeStraw = new Set();
+function spawnStrawberryBurst(xCount=1){
+  for(let i=0;i<xCount;i++){
+    spawnStrawberry();
+  }
+}
 function spawnStrawberry(){
-  if(activeSet.size > 36) return;
-  const el=document.createElement('div'); el.className='falling'; el.innerHTML=strawberrySVG;
-  el.style.left = (Math.random()*86 + 6) + 'vw';
-  const scale = (Math.random()*0.55) + 0.75; el.style.width = (52*scale) + 'px';
-  const dur = (2.8 + Math.random()*2.2); el.style.animationDuration = dur+'s';
-  document.body.appendChild(el); activeSet.add(el);
+  if(activeStraw.size > 52) return;
+  const el = document.createElement('div');
+  el.className = 'falling';
+  el.innerHTML = strawberrySVG;
+  const leftVW = (Math.random()*86 + 6);
+  el.style.left = leftVW + 'vw';
+  const scale = (Math.random()*0.6) + 0.7;
+  el.style.width = (48*scale) + 'px';
+  // set variation used by keyframes
+  const sx = (Math.random()*80 - 40) + 'px';
+  el.style.setProperty('--sx', sx);
+  // random animation duration and small sway animation applied
+  const dur = (2.6 + Math.random()*2.4);
+  el.style.animationDuration = dur + 's';
+  // add gentle sway via CSS animation but random phase
+  el.style.animationName = 'fall';
+  el.style.willChange = 'transform, left, opacity';
+  document.body.appendChild(el);
+  activeStraw.add(el);
+
+  // add glow tail using pseudo element via extra div
+  const tail = document.createElement('div');
+  tail.style.position='absolute';
+  tail.style.left='-6px';
+  tail.style.top='12px';
+  tail.style.width='36px';
+  tail.style.height='10px';
+  tail.style.background='radial-gradient(ellipse at 20% 50%, rgba(255,200,220,0.75), transparent 40%)';
+  tail.style.filter='blur(6px)';
+  tail.style.transform='rotate(-8deg)';
+  el.firstElementChild && el.firstElementChild.appendChild(tail);
+
+  // when animation ends -> land effect + maybe heart or spark
   el.addEventListener('animationend', ()=>{
-    // landing -> maybe heart sparkle
-    el.style.transition='transform .25s ease, opacity .28s ease'; el.style.transform+=' translateY(8px) scale(.92)'; el.style.opacity='0.92';
-    if(Math.random() < 0.28){ const heart=document.createElement('div'); heart.className='particle'; heart.textContent='💖'; const r=el.getBoundingClientRect(); heart.style.left=(r.left + r.width/2)+'px'; heart.style.top=(window.innerHeight - 78)+'px'; document.body.appendChild(heart); setTimeout(()=>heart.remove(),1000); if(audioReady) playTiny(520,0.05); }
-    else if(Math.random() < 0.22){ const s=document.createElement('div'); s.className='spark'; const r=el.getBoundingClientRect(); s.style.left=(r.left + r.width/2)+'px'; s.style.top=(window.innerHeight - 78)+'px'; s.style.width=s.style.height=(4 + Math.random()*4)+'px'; document.body.appendChild(s); setTimeout(()=>s.remove(),1100 + Math.random()*900); }
-    setTimeout(()=>{ el.remove(); activeSet.delete(el); },420);
-  }, {once:true});
-}
-setInterval(spawnStrawberry, 380);
-
-/* background sparkles */
-for(let i=0;i<24;i++){ const s=document.createElement('div'); s.className='spark'; s.style.left=(Math.random()*100)+'vw'; s.style.top=(Math.random()*100)+'vh'; s.style.animationDuration=(1.6 + Math.random()*2.2)+'s'; s.style.opacity=(0.25 + Math.random()*0.9); s.style.width=s.style.height=(3 + Math.random()*6)+'px'; document.body.appendChild(s); }
-
-/* click particle */
-const cake = document.getElementById('cake'); let clicks=0; let inSuper=false;
-function spawnParticle(x,y){ const p=document.createElement('div'); p.className='particle'; if(Math.random() < 0.6){ p.textContent = qqPhrases[Math.floor(Math.random()*qqPhrases.length)]; p.style.fontSize = (14 + Math.random()*10) + 'px'; } else { p.textContent = emojis[Math.floor(Math.random()*emojis.length)]; p.style.fontSize = (18 + Math.random()*10) + 'px'; }
- p.style.left = (x + (Math.random()*48 - 24)) + 'px'; p.style.top = (y + (Math.random()*36 - 18)) + 'px'; document.body.appendChild(p); setTimeout(()=>p.remove(),1050); }
-
-function firework(cx,cy){ const cols=['#ffd6e6','#fff7a8','#ffd9f0','#b3f5ff','#ffd3a6']; for(let i=0;i<14;i++){ const f=document.createElement('div'); f.className='firework'; f.style.left=cx+'px'; f.style.top=cy+'px'; f.style.background=cols[i%cols.length]; f.style.animationDuration = (700 + Math.random()*500) + 'ms'; document.body.appendChild(f); setTimeout(()=>f.remove(),1100); } }
-
-function superMode(){ inSuper=true; cake.classList.add('super'); const rect=cake.getBoundingClientRect(); const cx=rect.left + rect.width/2; const cy=rect.top + rect.height/2; for(let k=0;k<4;k++){ setTimeout(()=>firework(cx + rnd(-40,40), cy + rnd(-10,50)), k*180); }
- const ring=document.createElement('div'); ring.style.position='fixed'; ring.style.left=(rect.left + rect.width/2 - rect.width*0.9/2)+'px'; ring.style.top=(rect.top + rect.height/2 - rect.height*0.9/2)+'px'; ring.style.width=(rect.width*0.9)+'px'; ring.style.height=(rect.height*0.9)+'px'; ring.style.borderRadius='16px'; ring.style.zIndex=22; ring.style.pointerEvents='none'; ring.style.background='conic-gradient(from 120deg, rgba(255,160,200,0.28), rgba(255,240,170,0.24), rgba(160,230,255,0.22), rgba(230,200,255,0.18))'; ring.style.filter='blur(22px)'; ring.style.opacity='0.9'; document.body.appendChild(ring); setTimeout(()=>{ ring.remove(); cake.classList.remove('super'); inSuper=false; clicks=0; },4200);
-}
-
-/* helper rnd */
-function rnd(a,b){ return a + Math.random()*(b-a); }
-
-function onCakeClick(e){ if(!audioReady){ audioReady=true; playTiny(660,0.05); }
- cake.classList.add('pop'); setTimeout(()=>cake.classList.remove('pop'),160);
- for(let i=0;i<6;i++){ setTimeout(()=>spawnParticle(e.clientX, e.clientY), i*60); }
- if(audioReady) playTiny(760 - Math.random()*140,0.05);
- clicks++; if(clicks === 10 && !inSuper){ superMode(); }
+    el.style.transition = 'transform .26s ease, opacity .28s ease';
+    el.style.transform += ' translateY(8px) scale(.92)';
+    el.style.opacity = '0.94';
+    if(Math.random() < 0.30){
+      // heart particle at ground
+      const h = document.createElement('div');
+      h.className = 'particle';
+      h.textContent = '💖';
+      const rect = el.getBoundingClientRect();
+      h.style.left = (rect.left + rect.width/2) + 'px';
+      h.style.top  = (window.innerHeight - 78) + 'px';
+      h.style.fontSize = '20px';
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),1100);
+      if(audioPrimed) tinyBeep(520,0.05);
+    } else {
+      if(Math.random() < 0.28){
+        const s = document.createElement('div');
+        s.className = 'spark';
+        const rect = el.getBoundingClientRect();
+        s.style.left = (rect.left + rect.width/2) + 'px';
+        s.style.top  = (window.innerHeight - 78) + 'px';
+        s.style.width = s.style.height = (4 + Math.random()*5) + 'px';
+        document.body.appendChild(s);
+        setTimeout(()=>s.remove(), 900 + Math.random()*900);
+      }
+    }
+    setTimeout(()=>{ el.remove(); activeStraw.delete(el); }, 420);
+  }, { once:true });
 }
 
+// automatic rain
+const rainTimer = setInterval(()=>{ if(Math.random()<0.95) spawnStrawberry(); }, 360);
+
+/* ----------------------
+  Click particles & cake interactions
+------------------------*/
+const cake = document.getElementById('cake');
+let clickCount = 0;
+let superActive = false;
+
+function makeParticleAt(x,y){
+  const p = document.createElement('div');
+  p.className = 'particle';
+  // if toName exists, half the time show the "專屬" phrase
+  if(toName && Math.random() < 0.48){
+    p.textContent = `特別為 ${toName} 準備 ✨`;
+    p.style.fontSize = (15 + Math.random()*8) + 'px';
+  } else if(Math.random() < 0.6){
+    p.textContent = QQ[Math.floor(Math.random()*QQ.length)];
+    p.style.fontSize = (14 + Math.random()*10) + 'px';
+  } else {
+    p.textContent = EMO[Math.floor(Math.random()*EMO.length)];
+    p.style.fontSize = (18 + Math.random()*10) + 'px';
+  }
+  // jitter pos
+  p.style.left = (x + (Math.random()*56 - 28)) + 'px';
+  p.style.top  = (y + (Math.random()*36 - 18)) + 'px';
+  document.body.appendChild(p);
+  setTimeout(()=>p.remove(), 1100);
+}
+
+function fireworkBurst(cx, cy, count=16){
+  const colors = ['#ffd6e6','#fff7a8','#ffd9f0','#b3f5ff','#ffd3a6'];
+  for(let i=0;i<count;i++){
+    const f = document.createElement('div');
+    f.className = 'fw';
+    f.style.left = cx + 'px';
+    f.style.top  = cy + 'px';
+    f.style.background = colors[i % colors.length];
+    // random velocity using JS animation
+    document.body.appendChild(f);
+    const angle = Math.random()*Math.PI*2;
+    const dist = 80 + Math.random()*160;
+    const dur = 600 + Math.random()*700;
+    const start = performance.now();
+    (function animateParticle(el, a, d, st, du){
+      function frame(t){
+        const p = (t-st)/du;
+        if(p >= 1){ el.remove(); return; }
+        const eased = 1 - Math.pow(1-p, 2);
+        el.style.transform = `translate(${Math.cos(a)*d*eased}px, ${-Math.sin(a)*d*eased}px)`;
+        el.style.opacity = String(1 - p);
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    })(f, angle, dist, start, dur);
+  }
+}
+
+/* cake click */
+function onCakeClick(ev){
+  // prime audio on first interaction
+  if(!audioPrimed){ audioPrimed = true; tinyBeep(720,0.04); }
+
+  // simple pop animation
+  cake.classList.add('hover');
+  setTimeout(()=> cake.classList.remove('hover'), 160);
+
+  // spawn particles around click
+  const x = ev.clientX || window.innerWidth/2;
+  const y = ev.clientY || (window.innerHeight/2);
+  for(let i=0;i<6;i++){
+    setTimeout(()=> makeParticleAt(x, y), i*60);
+  }
+
+  // small strawberry burst for feel
+  spawnStrawberryBurst(2);
+
+  // sound
+  if(audioPrimed) tinyBeep(720 - Math.random()*160, 0.04);
+
+  clickCount++;
+  if(clickCount >= 10 && !superActive){
+    triggerSuperMode();
+  }
+}
+
+/* super mode: cake becomes big, rainbow ring, big fireworks */
+function triggerSuperMode(){
+  superActive = true;
+  cake.classList.add('super');
+  // rainbow ring
+  const rect = cake.getBoundingClientRect();
+  const ring = document.createElement('div');
+  ring.style.position = 'fixed';
+  ring.style.left = (rect.left + rect.width/2 - rect.width*0.95/2) + 'px';
+  ring.style.top  = (rect.top + rect.height/2 - rect.height*0.95/2) + 'px';
+  ring.style.width = (rect.width*0.95) + 'px';
+  ring.style.height = (rect.height*0.95) + 'px';
+  ring.style.borderRadius = '18px';
+  ring.style.zIndex = 34;
+  ring.style.pointerEvents = 'none';
+  ring.style.background = 'conic-gradient(from 120deg, rgba(255,160,200,0.34), rgba(255,240,170,0.28), rgba(160,230,255,0.26), rgba(230,200,255,0.22))';
+  ring.style.filter = 'blur(14px)';
+  ring.style.opacity = '0.98';
+  document.body.appendChild(ring);
+
+  // big fireworks around cake
+  for(let i=0;i<6;i++){
+    setTimeout(()=> {
+      const cx = rect.left + rect.width*(0.2 + Math.random()*0.6);
+      const cy = rect.top + rect.height*(0.2 + Math.random()*0.8);
+      fireworkBurst(cx, cy, 18);
+    }, i*230);
+  }
+
+  // clear after a while
+  setTimeout(()=>{ ring.remove(); cake.classList.remove('super'); superActive=false; clickCount=0; }, 4200);
+}
+
+/* hover & keyboard */
+cake.addEventListener('mouseenter', ()=> cake.classList.add('hover'));
+cake.addEventListener('mouseleave', ()=> cake.classList.remove('hover'));
 cake.addEventListener('click', onCakeClick);
-cake.addEventListener('mouseenter', ()=>{ cake.style.transform='translateY(-4px)'; });
-cake.addEventListener('mouseleave', ()=>{ cake.style.transform=''; });
+cake.setAttribute('tabindex','0');
+cake.addEventListener('keydown', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { const r = cake.getBoundingClientRect(); onCakeClick({ clientX: r.left + r.width/2, clientY: r.top + r.height/2 }); } } );
 
-// accessibility
-cake.setAttribute('tabindex','0'); cake.addEventListener('keydown',(e)=>{ if(e.key==='Enter' || e.key===' ') { const r=cake.getBoundingClientRect(); onCakeClick({ clientX: r.left + r.width/2, clientY: r.top + r.height/2 }); } });
+/* mobile double-tap to burst */
+let lastTap=0;
+document.addEventListener('touchstart',(ev)=>{
+  const now = Date.now();
+  if(now - lastTap < 280){
+    spawnStrawberryBurst(6);
+  }
+  lastTap = now;
+});
 
-// double-tap quick burst mobile
-let lastTap=0; document.addEventListener('touchstart',(ev)=>{ const now=Date.now(); if(now - lastTap < 280){ for(let i=0;i<6;i++) setTimeout(spawnStrawberry, i*60); } lastTap = now; });
+/* safety purge of stray nodes */
+setInterval(()=>{
+  if(activeStraw.size > 80){
+    const arr = Array.from(activeStraw).slice(0,12);
+    arr.forEach(e => { e.remove(); activeStraw.delete(e); });
+  }
+  // also remove stray fireworks/particles older than N if any (best-effort)
+}, 2000);
 
-// safety purge
-setInterval(()=>{ if(activeSet.size > 70){ const arr=Array.from(activeSet); for(let i=0;i<12 && arr[i]; i++){ arr[i].remove(); activeSet.delete(arr[i]); } } }, 2000);
-
+/* expose small helpers to console for testing */
+window._cakeHelpers = {
+  spawnStrawberry, spawnStrawberryBurst, spawnShootingStar, triggerSuperMode
+};
 </script>
 </body>
 </html>
