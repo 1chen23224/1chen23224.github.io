@@ -1,146 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');
+
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    font-family: 'Noto Sans TC', sans-serif;
+    background-color: #f3e5f5; /* 淡紫色背景 */
+    color: #424242;
     margin: 0;
-    background-color: #fce4ec; /* 淡粉色背景 */
-    font-family: 'Arial', sans-serif;
-    overflow: hidden;
-}
-
-.cake-container {
+    padding: 0;
     text-align: center;
-    position: relative;
 }
 
-h1 {
-    color: #e91e63; /* 深粉色標題 */
-    font-size: 3em;
-    margin-bottom: 20px;
+header {
+    background-color: #e1bee7; /* 稍深的紫色 */
+    padding: 2rem;
+    border-bottom: 5px solid #ce93d8;
 }
 
-.cake {
-    position: relative;
-    width: 250px;
-    height: 300px;
-    margin: 0 auto;
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    color: #6a1b9a; /* 深紫色文字 */
+}
+
+main {
     display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 2rem;
+    gap: 2rem;
 }
 
-.tier {
+.snack-card {
     background-color: #fff;
-    border: 5px solid #ffc0cb; /* 粉色邊框 */
-    border-radius: 50%;
-    position: absolute;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    width: 300px;
+    transition: transform 0.3s ease-in-out;
 }
 
-.tier-bottom {
-    width: 250px;
-    height: 100px;
-    bottom: 0;
-    z-index: 1;
+.snack-card:hover {
+    transform: translateY(-10px);
 }
 
-.tier-middle {
-    width: 200px;
-    height: 80px;
-    bottom: 80px;
-    z-index: 2;
+.snack-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
 }
 
-.tier-top {
-    width: 150px;
-    height: 70px;
-    bottom: 140px;
-    z-index: 3;
+.snack-card h2 {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    color: #8e24aa; /* 紫色標題 */
 }
 
-.candle-container {
-    position: absolute;
-    bottom: 200px; /* 調整蠟燭位置 */
-    z-index: 4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.snack-card p {
+    padding: 0 1rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
-.candle {
-    width: 10px;
-    height: 40px;
-    background-color: #ffff00; /* 黃色蠟燭 */
-    border-radius: 2px;
-    margin-bottom: -5px; /* 讓火焰更靠近蠟燭 */
-}
-
-.flame {
-    width: 10px;
-    height: 15px;
-    background-color: orange;
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    box-shadow: 0 0 10px 2px orange, 0 0 20px 5px yellow;
-    animation: flicker 0.5s infinite alternate;
-}
-
-@keyframes flicker {
-    0% { transform: scale(1); opacity: 1; }
-    100% { transform: scale(1.05); opacity: 0.8; }
-}
-
-.strawberry {
-    position: absolute;
-    width: 30px;
-    height: 35px;
-    background-color: #ff0000; /* 紅色草莓 */
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    cursor: pointer;
-    box-shadow: 0 0 5px rgba(0,0,0,0.3);
-    transition: transform 0.2s ease-in-out;
-    z-index: 5; /* 確保草莓在蛋糕頂層 */
-}
-
-.strawberry::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 10px;
-    height: 10px;
-    background-color: green; /* 草莓葉子 */
-    border-radius: 50%;
-}
-
-.strawberry:hover {
-    transform: scale(1.1);
-}
-
-.strawberry-1 { top: 180px; left: 50px; }
-.strawberry-2 { top: 160px; left: 150px; }
-.strawberry-3 { top: 200px; left: 90px; }
-.strawberry-4 { top: 150px; left: 100px; } /* 新增一個草莓 */
-
-
-#message-box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.9);
-    border: 3px solid #e91e63;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    font-size: 1.5em;
-    color: #333;
-    z-index: 10;
-    text-align: center;
-    width: 80%;
-    max-width: 400px;
-}
-
-.hidden {
-    display: none;
+footer {
+    background-color: #e1bee7;
+    padding: 1rem;
+    margin-top: 2rem;
+    font-weight: 300;
 }
