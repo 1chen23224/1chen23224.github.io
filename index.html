@@ -1,21 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QQ級煙花匯演</title>
+    <title>士多啤利蛋糕</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <canvas id="fireworks-canvas"></canvas>
-    
-    <button id="finale-btn">🚀 SIWAI 啟動壓軸大匯演</button>
-
-    <audio id="launch-sound" src="launch.mp3" preload="auto"></audio>
-    <audio id="explosion-sound-1" src="explosion1.mp3" preload="auto"></audio>
-    <audio id="explosion-sound-2" src="explosion2.mp3" preload="auto"></audio>
-    <audio id="explosion-sound-3" src="explosion3.mp3" preload="auto"></audio>
-
+    <div class="cake-container">
+        <h1>SIWAI 的宵夜</h1>
+        <div class="cake">
+            <div class="tier tier-bottom"></div>
+            <div class="tier tier-middle"></div>
+            <div class="tier tier-top"></div>
+            <div class="candle-container">
+                <div class="candle"></div>
+                <div class="flame"></div>
+            </div>
+            <div class="strawberry strawberry-1" data-message="採用日本福岡草莓！"></div>
+            <div class="strawberry strawberry-2" data-message="澳門最好既甜品師打造！"></div>
+        </div>
+        <div id="message-box" class="hidden"></div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
