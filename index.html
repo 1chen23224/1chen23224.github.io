@@ -3,236 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>真正3D立體草莓奶油蛋糕2</title>
-    <style>
-        :root {
-            --cake-height: 100px; /* 蛋糕高度 */
-            --cake-radius: 125px; /* 蛋糕半徑 */
-            --strawberry-size: 45px; /* 草莓大小 */
-            --piping-size: 22px; /* 擠花點大小 */
-            --cream-color: #ffffff;
-            --strawberry-color: #d92e4a;
-            --strawberry-darker: #c02a42;
-            --leaf-color: #3e8e41;
-            --grid-color: #f0f0f0;
-            --board-color: #fff;
-            --board-shadow-color: rgba(0,0,0,0.15);
-            --bg-color: #e8e8e8;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            perspective: 1500px; /* 關鍵：開啟3D視角 */
-            overflow: hidden;
-        }
-
-        .cake-scene {
-            position: relative;
-            transform-style: preserve-3d; /* 關鍵：讓子元素進入3D空間 */
-            transform: rotateX(60deg) rotateZ(30deg); /* 調整整個蛋糕的視角 */
-            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.2)); /* 整個場景的陰影 */
-        }
-
-        .cake-board {
-            width: calc(var(--cake-radius) * 2 + 50px);
-            height: calc(var(--cake-radius) * 2 + 50px);
-            background-color: var(--board-color);
-            border-radius: 8px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-left: calc(-1 * (var(--cake-radius) + 25px));
-            margin-top: calc(-1 * (var(--cake-radius) + 25px));
-            transform: translateZ(-5px); /* 底板位於蛋糕下方 */
-            box-shadow: 0 5px 15px var(--board-shadow-color);
-        }
-        
-        /* 蛋糕主體容器 */
-        .cake {
-            width: calc(var(--cake-radius) * 2);
-            height: calc(var(--cake-radius) * 2);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-left: calc(-1 * var(--cake-radius));
-            margin-top: calc(-1 * var(--cake-radius));
-            transform-style: preserve-3d; /* 關鍵：讓蛋糕的各個部分也進入3D空間 */
-        }
-
-        /* 蛋糕頂部 */
-        .cake-top {
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, var(--cream-color) 70%, #f0f0f0 100%);
-            border-radius: 50%;
-            position: absolute;
-            transform: translateZ(var(--cake-height)); /* 關鍵：抬高頂部形成厚度 */
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-        }
-
-        /* 蛋糕側面 - 用多個 div 拼接成圓柱 */
-        .cake-side-wrapper {
-            position: absolute;
-            width: 100%;
-            height: var(--cake-height);
-            transform-style: preserve-3d; /* 關鍵：讓側面段也進入3D空間 */
-        }
-        
-        .cake-side-wrapper .segment {
-            position: absolute;
-            width: calc(var(--cake-radius) * 2 * 3.14159 / 20 + 1px); /* 弧長/20，加1px防止縫隙 */
-            height: var(--cake-height);
-            left: 50%;
-            transform: rotateY(calc(var(--i) * 18deg)) translateZ(var(--cake-radius));
-            margin-left: calc(-1 * (var(--cake-radius) * 2 * 3.14159 / 20 / 2));
-            background: linear-gradient(to right, #f5f5f5, var(--cream-color), #f5f5f5);
-        }
-        
-        /* 蛋糕底面 */
-        .cake-bottom {
-            width: 100%;
-            height: 100%;
-            background-color: #eee;
-            border-radius: 50%;
-            position: absolute;
-            transform: translateZ(0); /* 底部在Z=0 */
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        /* 頂部格線 */
-        .grid-lines {
-            position: absolute;
-            width: 60%;
-            height: 60%;
-            top: 20%;
-            left: 20%;
-            border: 1px solid var(--grid-color);
-        }
-        .grid-lines::before, .grid-lines::after {
-            content: '';
-            position: absolute;
-            background-color: var(--grid-color);
-        }
-        .grid-lines::before { width: 100%; height: 1px; top: 50%; }
-        .grid-lines::after { width: 1px; height: 100%; left: 50%; }
-
-        /* 草莓 */
-        .strawberry-wrapper {
-            position: absolute;
-            width: var(--strawberry-size);
-            height: var(--strawberry-size);
-            transform-style: preserve-3d;
-            transform: translateZ(calc(var(--cake-height))); /* 草莓在蛋糕頂部之上 */
-            filter: drop-shadow(0 5px 8px rgba(0,0,0,0.3));
-        }
-        .strawberry {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, var(--strawberry-darker), var(--strawberry-color) 70%);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            transform: rotate(-45deg) rotateX(-20deg); /* 讓草莓稍微傾斜 */
-        }
-
-        /* 草莓定位 */
-        .s-center { top: 50%; left: 50%; margin-left: calc(-1 * var(--strawberry-size) / 2); margin-top: calc(-1 * var(--strawberry-size) / 2); }
-        .s-ring-1 { top: 20%; left: 50%; margin-left: calc(-1 * var(--strawberry-size) / 2); margin-top: calc(-1 * var(--strawberry-size) / 2); }
-        .s-ring-2 { top: 50%; left: 20%; margin-left: calc(-1 * var(--strawberry-size) / 2); margin-top: calc(-1 * var(--strawberry-size) / 2); }
-        .s-ring-3 { top: 50%; right: 20%; margin-right: calc(-1 * var(--strawberry-size) / 2); margin-top: calc(-1 * var(--strawberry-size) / 2); }
-        .s-ring-4 { bottom: 20%; left: 50%; margin-left: calc(-1 * var(--strawberry-size) / 2); margin-bottom: calc(-1 * var(--strawberry-size) / 2); }
-
-        /* 擠花點 */
-        .piping-wrapper {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            transform-style: preserve-3d;
-            transform: rotateZ(-11.25deg);
-        }
-        .piping-wrapper .piping-item {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-left: calc(-1 * var(--piping-size) / 2);
-            margin-top: calc(-1 * var(--piping-size) / 2);
-            transform-origin: 0 0;
-            transform: rotate(calc(var(--idx) * (360 / 16) * 1deg)) translateY(calc(-1 * var(--cake-radius) + 15px)) translateZ(calc(var(--cake-height) + 5px));
-        }
-        .piping-dot {
-            width: var(--piping-size);
-            height: var(--piping-size);
-            background: linear-gradient(to top, var(--strawberry-darker), var(--strawberry-color));
-            border-radius: 50%;
-            box-shadow: inset 0 2px 5px rgba(255,255,255,0.3);
-        }
-
-    </style>
+    <title>宵夜食光</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <header>
+        <h1>🌙 宵夜食光 ✨</h1>
+        <p>今天晚上，想來點什麼撫慰你的心與胃？</p>
+    </header>
 
-    <div class="cake-scene">
-        <div class="cake-board"></div>
-        <div class="cake">
-            <div class="cake-bottom"></div>
-            <div class="cake-side-wrapper">
-                <div class="segment" style="--i:0;"></div>
-                <div class="segment" style="--i:1;"></div>
-                <div class="segment" style="--i:2;"></div>
-                <div class="segment" style="--i:3;"></div>
-                <div class="segment" style="--i:4;"></div>
-                <div class="segment" style="--i:5;"></div>
-                <div class="segment" style="--i:6;"></div>
-                <div class="segment" style="--i:7;"></div>
-                <div class="segment" style="--i:8;"></div>
-                <div class="segment" style="--i:9;"></div>
-                <div class="segment" style="--i:10;"></div>
-                <div class="segment" style="--i:11;"></div>
-                <div class="segment" style="--i:12;"></div>
-                <div class="segment" style="--i:13;"></div>
-                <div class="segment" style="--i:14;"></div>
-                <div class="segment" style="--i:15;"></div>
-                <div class="segment" style="--i:16;"></div>
-                <div class="segment" style="--i:17;"></div>
-                <div class="segment" style="--i:18;"></div>
-                <div class="segment" style="--i:19;"></div>
-            </div>
-            <div class="cake-top">
-                <div class="grid-lines"></div>
-                
-                <div class="strawberry-wrapper s-center"><div class="strawberry"></div></div>
-                <div class="strawberry-wrapper s-ring-1"><div class="strawberry"></div></div>
-                <div class="strawberry-wrapper s-ring-2"><div class="strawberry"></div></div>
-                <div class="strawberry-wrapper s-ring-3"><div class="strawberry"></div></div>
-                <div class="strawberry-wrapper s-ring-4"><div class="strawberry"></div></div>
-
-                <div class="piping-wrapper">
-                    <div class="piping-item" style="--idx:0;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:1;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:2;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:3;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:4;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:5;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:6;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:7;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:8;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:9;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:10;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:11;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:12;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:13;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:14;"><div class="piping-dot"></div></div>
-                    <div class="piping-item" style="--idx:15;"><div class="piping-dot"></div></div>
-                </div>
-            </div>
+    <main>
+        <div class="snack-card">
+            <img src="https://images.unsplash.com/photo-1584365685547-9a5fb0b64e2c" alt="起司吐司">
+            <h2>邪惡起司吐司</h2>
+            <p>簡單的吐司配上融化的起司，是宵夜的經典不敗選擇。加上火腿或雞蛋，美味更升級！</p>
         </div>
-    </div>
 
+        <div class="snack-card">
+            <img src="https://images.unsplash.com/photo-1551024601-bec78c42a27b" alt="珍奶">
+            <h2>療癒珍珠奶茶</h2>
+            <p>Q彈的珍珠搭配香醇的奶茶，是台灣人最愛的宵夜飲品之一。自己動手做，甜度冰塊都能客製化！</p>
+        </div>
+
+        <div class="snack-card">
+            <img src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13" alt="泡麵">
+            <h2>快速美味泡麵</h2>
+            <p>深夜肚子餓的最佳夥伴！打上一顆蛋，再加點青菜，就是一碗豐盛又滿足的宵夜。</p>
+        </div>
+
+        <div class="snack-card">
+            <img src="https://images.unsplash.com/photo-1600326145359-3a44819ab463" alt="雞塊">
+            <h2>香酥炸雞塊</h2>
+            <p>金黃酥脆的雞塊，沾上喜歡的醬料，一口接一口，停不下來的美味！</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Designed with ❤️ for your late-night cravings.</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
