@@ -1,47 +1,208 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>宵夜食光</title>
-    <link rel="stylesheet" href="style.css">
+    <title>深夜裡的甜蜜誘惑</title>
+    <style>
+        /* --- Google Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Playfair+Display:ital,wght@0,400;1,700&display=swap');
+
+        /* --- 整體風格 (Global Styles) --- */
+        body {
+            margin: 0;
+            font-family: 'Noto Serif TC', serif;
+            background-color: #1a1a1a; /* 深炭黑色背景 */
+            color: #f5f5f5; /* 柔和的米白色文字 */
+            overflow-x: hidden;
+        }
+
+        /* --- 主容器 (Main Container) --- */
+        .container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            perspective: 1000px; /* 為3D效果設定透視 */
+        }
+
+        /* --- 蛋糕區塊 (Cake Section) --- */
+        .cake-section {
+            width: 50%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            transition: width 0.8s cubic-bezier(0.77, 0, 0.175, 1); /* 平滑的寬度變換效果 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container:hover .cake-section {
+            width: 45%; /* 滑鼠懸停時，未選中的區塊稍微變窄 */
+        }
+
+        .container .cake-section:hover {
+            width: 55%; /* 滑鼠懸停時，選中的區塊變寬 */
+        }
+
+        /* --- 背景圖片 (Background Image) --- */
+        .cake-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.6s ease-out, filter 0.6s ease;
+            filter: brightness(0.7); /* 預設亮度較低，凸顯文字 */
+        }
+
+        #strawberry-cake::before {
+            background-image: url('https://images.pexels.com/photos/827516/pexels-photo-827516.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+        }
+
+        #chiffon-cake::before {
+            background-image: url('https://images.pexels.com/photos/5741295/pexels-photo-5741295.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');
+        }
+
+        /* --- 滑鼠懸停的圖片效果 --- */
+        .cake-section:hover::before {
+            transform: scale(1.05); /* 圖片輕微放大 */
+            filter: brightness(0.5); /* 圖片變得更暗，讓文字更清晰 */
+        }
+
+        /* --- 內容區塊 (Content Block) --- */
+        .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .cake-section:hover .content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(0,0,0,0.7);
+        }
+        
+        #strawberry-cake h2 {
+           color: #ffdae0; /* 草莓粉色 */
+        }
+
+        #chiffon-cake h2 {
+            color: #fffbe6; /* 奶油黃色 */
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 400px;
+            margin: 0 auto;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+
+        /* --- 分隔線 (Divider) --- */
+        .divider {
+            width: 2px;
+            background: linear-gradient(transparent, #c94a5a, #ffda79, transparent); /* 漸層的分隔線 */
+            cursor: ew-resize;
+        }
+        
+        /* --- 響應式設計 (Mobile Responsive) --- */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .cake-section, .container:hover .cake-section, .container .cake-section:hover {
+                width: 100%;
+                height: 50vh;
+            }
+            .divider {
+                display: none;
+            }
+            h2 {
+                font-size: 2.5rem;
+            }
+            .content {
+                opacity: 1; /* 在手機上直接顯示文字 */
+                transform: translateY(0);
+                background: rgba(0,0,0,0.3);
+                border-radius: 10px;
+                padding: 20px;
+            }
+        }
+
+    </style>
 </head>
 <body>
-    <header>
-        <h1>🌙 宵夜食光 ✨</h1>
-        <p>今天晚上，想來點什麼撫慰你的心與胃？</p>
-    </header>
 
-    <main>
-        <div class="snack-card">
-            <img src="https://images.unsplash.com/photo-1584365685547-9a5fb0b64e2c" alt="起司吐司">
-            <h2>邪惡起司吐司</h2>
-            <p>簡單的吐司配上融化的起司，是宵夜的經典不敗選擇。加上火腿或雞蛋，美味更升級！</p>
+    <div class="container">
+
+        <div class="cake-section" id="strawberry-cake">
+            <div class="content" data-jarallax-element="0 50">
+                <h2>草莓雲朵蛋糕</h2>
+                <p>當鮮奶油的絲滑，遇上微酸清甜的當季草莓。每一口，都是空氣感的戚風蛋糕在舌尖融化。這不是甜點，這是對疲憊靈魂最溫柔的獎賞。</p>
+            </div>
         </div>
 
-        <div class="snack-card">
-            <img src="https://images.unsplash.com/photo-1551024601-bec78c42a27b" alt="珍奶">
-            <h2>療癒珍珠奶茶</h2>
-            <p>Q彈的珍珠搭配香醇的奶茶，是台灣人最愛的宵夜飲品之一。自己動手做，甜度冰塊都能客製化！</p>
+        <div class="divider"></div>
+
+        <div class="cake-section" id="chiffon-cake">
+            <div class="content" data-jarallax-element="0 50">
+                <h2>戚風海綿蛋糕</h2>
+                <p>回歸最純粹的美好。烤至金黃的蛋糕體，散發著濃郁的蛋奶香氣。那無與倫比的蓬鬆與彈性，彷彿把一整片黃昏的溫暖都吃進了肚子裡。</p>
+            </div>
         </div>
 
-        <div class="snack-card">
-            <img src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13" alt="泡麵">
-            <h2>快速美味泡麵</h2>
-            <p>深夜肚子餓的最佳夥伴！打上一顆蛋，再加點青菜，就是一碗豐盛又滿足的宵夜。</p>
-        </div>
+    </div>
 
-        <div class="snack-card">
-            <img src="https://images.unsplash.com/photo-1600326145359-3a44819ab463" alt="雞塊">
-            <h2>香酥炸雞塊</h2>
-            <p>金黃酥脆的雞塊，沾上喜歡的醬料，一口接一口，停不下來的美味！</p>
-        </div>
-    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.cake-section');
 
-    <footer>
-        <p>Designed with ❤️ for your late-night cravings.</p>
-    </footer>
+            sections.forEach(section => {
+                section.addEventListener('mousemove', function(e) {
+                    const { clientX, clientY, currentTarget } = e;
+                    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+                    
+                    // 計算滑鼠在區塊內的相對位置 (-0.5 to 0.5)
+                    const x = (clientX - left) / width - 0.5;
+                    const y = (clientY - top) / height - 0.5;
 
-    <script src="script.js"></script>
+                    // 設定旋轉和位移的強度
+                    const rotateX = y * -10; // Y軸移動控制X軸旋轉
+                    const rotateY = x * 10;  // X軸移動控制Y軸旋轉
+                    
+                    const image = currentTarget.querySelector('::before'); // 雖然不能直接選偽元素，但思路如此
+
+                    // 我們將效果應用於內容上，讓它有3D感
+                    const content = currentTarget.querySelector('.content');
+                    content.style.transform = `translateZ(40px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+                    // 偽元素的背景圖片我們給予一個小小的位移，增強視差
+                    currentTarget.style.setProperty('--x', `${-x * 20}px`);
+                    currentTarget.style.setProperty('--y', `${-y * 20}px`);
+                    currentTarget.style.backgroundPosition = `calc(50% + var(--x, 0px)) calc(50% + var(--y, 0px))`;
+                });
+
+                section.addEventListener('mouseleave', function(e) {
+                    const content = e.currentTarget.querySelector('.content');
+                    content.style.transform = `translateZ(0) rotateX(0deg) rotateY(0deg)`; // 恢復原狀
+                });
+            });
+        });
+    </script>
 </body>
 </html>
