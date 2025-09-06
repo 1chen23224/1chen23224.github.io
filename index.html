@@ -1,299 +1,179 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>🍓 李的烘焙坊🍰</title>
-  <style>
-    :root{
-      --bg1:#ffe6f0; --bg2:#fff5e6;
-      --accent:#ff4d88;
-    }
-    html,body{height:100%; margin:0;}
-    body {
-      margin: 0;
-      font-family: "Comic Sans MS", "Microsoft JhengHei", sans-serif;
-      background: linear-gradient(135deg, var(--bg1), var(--bg2));
-      text-align: center;
-      overflow: hidden; /* 不要出現捲軸 */
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      user-select:none;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>🍓 宵夜</title>
+<style>
+  :root{
+    --bg1:#fff0f6; --bg2:#fffaf0; --bg3:#f0f7ff;
+    --accent:#ff4d88; --cream:#fff4fb;
+  }
+  html,body{height:100%; margin:0;}
+  body{
+    margin:0;
+    font-family: "Comic Sans MS","Microsoft JhengHei",sans-serif;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(255,220,235,0.35), transparent 10%),
+                radial-gradient(900px 500px at 90% 90%, rgba(230,245,255,0.5), transparent 12%),
+                linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+    background-size:400% 400%;
+    animation:bgShift 18s ease-in-out infinite;
+    color:#5a2b3a;
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  @keyframes bgShift{ 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
 
-    h1{
-      margin: 36px 0 10px;
-      color:var(--accent);
-      font-size:2.6rem;
-      animation: bounce 1s infinite alternate;
-    }
-    @keyframes bounce{
-      from {transform: translateY(0);}
-      to {transform: translateY(-8px);}
-    }
+  .wrap{width:100%; max-width:820px; margin:28px auto; text-align:center; position:relative; z-index:20;}
+  h1{ margin:0 0 10px; font-size:2.2rem; background:linear-gradient(90deg,#ff6aa6,#ff8ecb,#ffd9f0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:0.6px; }
+  .subtitle{margin-top:6px;color:#a04a6b; opacity:0.9;}
 
-    .scene {
-      position: relative;
-      width: 100%;
-      max-width: 760px;
-      margin: 0 auto;
-      z-index: 10;
-    }
+  .scene{position:relative; padding:32px 10px 80px;}
+  .cake{ width:300px; max-width:86%; margin:26px auto; position:relative; cursor:pointer; transform-origin:center bottom; transition: transform .18s ease; filter: drop-shadow(0 18px 28px rgba(200,120,160,0.12)); }
+  .cake.pop { transform: translateY(-6px) scale(1.02); }
+  .msg { margin-top:10px; font-size:1.1rem; color:#b24f76; opacity:0.95; text-shadow:0 2px 6px rgba(255,200,220,0.35); }
 
-    .cake {
-      width: 260px;
-      margin: 18px auto;
-      position: relative;
-      z-index: 20;
-      animation: wiggle 1.6s infinite ease-in-out;
-    }
-    @keyframes wiggle{
-      0%{ transform: rotate(0deg); }
-      25%{ transform: rotate(2deg); }
-      50%{ transform: rotate(-2deg); }
-      100%{ transform: rotate(0deg); }
-    }
+  .falling { position:fixed; top:-140px; width:52px; height:auto; pointer-events:none; z-index:12; transform-origin:center; animation: fall linear forwards; will-change: transform, opacity; }
+  @keyframes fall{ 0%{ transform: translateY(0) rotate(0deg); opacity:1; } 70%{ transform: translateY(78vh) rotate(200deg); opacity:1; } 100%{ transform: translateY(105vh) rotate(360deg); opacity:0.95; } }
 
-    .msg {
-      font-size: 1.6rem;
-      color: #ff6699;
-      margin-top: 10px;
-      animation: glow 1.6s infinite alternate;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 4px #ffd0e0; }
-      to { text-shadow: 0 0 12px #ff88b3; }
-    }
+  .particle{ position:fixed; pointer-events:none; font-size:18px; user-select:none; animation: particleUp .95s cubic-bezier(.2,.9,.2,1) forwards; z-index:40; font-weight:700; }
+  @keyframes particleUp{ 0%{ transform: translateY(0) scale(1); opacity:1; } 100%{ transform: translateY(-84px) scale(.6); opacity:0; } }
 
-    .controls {
-      margin-top: 18px;
-      display:flex;
-      justify-content:center;
-      gap:12px;
-      align-items:center;
-    }
+  .spark{ position:fixed; width:6px;height:6px;border-radius:50%; background:linear-gradient(180deg,#fff,#ffe0f0); filter:blur(.2px); opacity:.9; pointer-events:none; z-index:6; animation: tw 2.6s ease-in-out infinite; }
+  @keyframes tw{ 0%{transform:scale(.7);opacity:.25;} 50%{transform:scale(1.4);opacity:1;} 100%{transform:scale(.8);opacity:.3;} }
 
-    .button {
-      background: linear-gradient(180deg,#ff9ab3,#ff6a90);
-      color:white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 24px;
-      font-size:1.05rem;
-      cursor:pointer;
-      box-shadow: 0 6px 14px rgba(255,80,120,0.15);
-      transition: transform .12s ease, box-shadow .12s ease;
-    }
-    .button:active{ transform: translateY(2px) scale(.99); }
-    .small {
-      background: transparent;
-      border: 2px dashed rgba(255,90,140,0.25);
-      color: var(--accent);
-      padding:8px 12px;
-      border-radius: 12px;
-    }
+  .cake.super{ transform:translateY(-10px) scale(1.18); filter: drop-shadow(0 34px 44px rgba(200,120,160,0.18)); transition: transform .35s cubic-bezier(.2,.9,.2,1), filter .35s; }
+  .firework{ position:fixed; width:6px; height:6px; border-radius:50%; pointer-events:none; z-index:50; animation: fw 900ms linear forwards; }
+  @keyframes fw{ 0%{ transform: translateY(0) scale(1); opacity:1; } 100%{ transform: translateY(-180px) translateX(120px) scale(.6); opacity:0; } }
 
-    /* ---------- 草莓雨（整個畫面生成的容器元素） ---------- */
-    .falling-strawberry {
-      position: fixed;
-      top: -120px;
-      width: 56px;              /* 設定 SVG 的顯示大小 */
-      height: auto;
-      pointer-events: none;
-      z-index: 5;
-      transform-origin: center;
-      /* 使用 CSS 變數來控制單顆時間，JS 會設定 --dur */
-      animation: fall var(--dur, 3.5s) linear forwards;
-      will-change: transform, opacity;
-    }
+  .glow{ position:absolute; left:50%; top:16px; transform:translateX(-50%); width:240px; height:84px; pointer-events:none; background: radial-gradient(50% 40% at 50% 10%, rgba(255,220,235,0.85), transparent 40%); border-radius:50%; filter:blur(12px); z-index:25; opacity:.85; }
 
-    @keyframes fall {
-      0% { transform: translateY(0) rotate(0deg) scale(1); opacity:1; }
-      85% { transform: translateY(98vh) rotate(360deg) scale(0.95); opacity:1; }
-      100% { transform: translateY(110vh) rotate(720deg) scale(0.85); opacity:0.92; }
-    }
+  .ownerBadge{ position:absolute; right:-6px; top:-6px; background:linear-gradient(90deg,#fff,#ffe8f1); border:1px solid rgba(255,120,160,0.22); color:#8f4663; padding:6px 8px; border-radius:12px; font-size:12px; box-shadow:0 6px 14px rgba(200,120,160,0.06); }
 
-    /* 裝飾用小草莓（cake 上） */
-    .deco-strawberry { width:44px; height:auto; display:inline-block; vertical-align:middle; }
+  /* small input pill (hidden by default) */
+  .pill{ position:fixed; left:12px; bottom:12px; background:rgba(255,255,255,0.95); padding:8px 10px; border-radius:999px; box-shadow:0 6px 18px rgba(40,20,30,0.08); font-size:13px; }
 
-    /* 小提醒字 */
-    .hint { font-size: .9rem; color:#cc6a86; margin-top:6px; opacity:0.9; }
-
-    /* 可調整最多同時出現數量、響應式等 */
-    @media (max-width:520px){
-      .cake{ width:180px; }
-      .falling-strawberry { width:40px; }
-      h1{ font-size:1.8rem; }
-      .msg{ font-size:1.25rem; }
-    }
-  </style>
+  @media (max-width:520px){ .cake{ width:220px; } .particle{ font-size:16px; } .glow{ width:180px; height:64px; top:14px; } }
+</style>
 </head>
 <body>
-  <h1>🍓 呢到有全澳門最好食嘅士多啤利蛋糕 🍰</h1>
+  <div class="wrap">
+    <h1>🍓 澳大第一草莓蛋糕</h1>
+    <div class="subtitle">輕輕點一下蛋糕，會有小驚喜 ✨</div>
 
-  <div class="scene">
-    <div class="cake" aria-hidden="true">
-      <!-- 完全內嵌的 SVG 蛋糕（無外部資源） -->
-      <svg viewBox="0 0 220 140" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="草莓蛋糕插畫">
-        <!-- 盤子 -->
-        <ellipse cx="110" cy="128" rx="82" ry="10" fill="#fff1f6" stroke="#ffd7e8" />
-        <!-- 底層蛋糕體 -->
-        <rect x="32" y="70" rx="18" ry="18" width="156" height="56" fill="#ffd6e0" stroke="#ffb6ce"/>
-        <!-- 鮮奶油層 -->
-        <path d="M32 70 Q56 48 80 70 T128 70 T176 70 T188 70 L188 74 Q166 92 132 74 T80 74 T32 74 Z" fill="#fff0f6" opacity="0.95"/>
-        <!-- 上層奶油圓頂 -->
-        <ellipse cx="110" cy="56" rx="62" ry="34" fill="#fff4fb" stroke="#ffd9ea"/>
-        <!-- 草莓（擺在蛋糕上） -->
-        <!-- 我用同樣的向量草莓造型小圖示 -->
-        <g transform="translate(60,33) scale(0.9)">
-          <g>
-            <ellipse cx="0" cy="0" rx="10" ry="14" fill="#ff3b55"/>
-            <path d="M-7 -8 C -9 -14, 9 -14, 7 -8 L 7 -8 L -7 -8 Z" fill="#3db64a"/>
-            <circle cx="-2" cy="-1" r="0.8" fill="#fff8b0" />
-            <circle cx="3" cy="1.5" r="0.7" fill="#fff8b0" />
-          </g>
-        </g>
+    <div class="scene" id="scene">
+      <div class="glow" id="glow" aria-hidden="true"></div>
 
-        <g transform="translate(110,26) scale(1)">
-          <g>
-            <ellipse cx="0" cy="0" rx="12" ry="17" fill="#ff3b55"/>
-            <path d="M-9 -10 C -11 -17, 11 -17, 9 -10 L 9 -10 L -9 -10 Z" fill="#2fb64a"/>
-            <circle cx="-3" cy="-1" r="0.9" fill="#fff8b0" />
-            <circle cx="4" cy="1.8" r="0.75" fill="#fff8b0" />
-          </g>
-        </g>
+      <div class="cake" id="cake" role="img" aria-label="草莓蛋糕">
+        <svg viewBox="0 0 260 160" width="100%" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#fff1f6"/><stop offset="1" stop-color="#fff6fb"/></linearGradient>
+            <linearGradient id="cakeFill" x1="0" x2="1"><stop offset="0" stop-color="#ffdfe7"/><stop offset="1" stop-color="#ffe7ef"/></linearGradient>
+            <radialGradient id="shine" cx="30%" cy="20%" r="50%"><stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+          </defs>
 
-        <g transform="translate(160,36) scale(0.85)">
-          <g>
-            <ellipse cx="0" cy="0" rx="9.5" ry="13" fill="#ff3b55"/>
-            <path d="M-6 -8 C -8 -13, 8 -13, 6 -8 L 6 -8 L -6 -8 Z" fill="#39b64a"/>
-            <circle cx="-2" cy="-0.5" r="0.7" fill="#fff8b0" />
-            <circle cx="3" cy="1.2" r="0.6" fill="#fff8b0" />
-          </g>
-        </g>
+          <ellipse cx="130" cy="142" rx="92" ry="12" fill="#fff7f9" stroke="#ffdbe8" />
+          <rect x="40" y="68" rx="16" ry="16" width="180" height="62" fill="url(#cakeFill)" stroke="#ffbed1" />
+          <path d="M40 74 Q68 40 100 74 T180 74 T220 74 L220 84 Q176 110 130 86 T100 86 T40 86 Z" fill="url(#g1)" opacity=".98"/>
+          <ellipse cx="130" cy="56" rx="70" ry="36" fill="url(#g1)" stroke="#ffdfe8" />
+          <ellipse cx="98" cy="44" rx="18" ry="8" fill="url(#shine)" opacity=".6"/>
 
-        <!-- 小亮點 -->
-        <circle cx="86" cy="82" r="1.2" fill="#ffffff" opacity=".9"/>
-        <circle cx="130" cy="70" r="1.2" fill="#ffffff" opacity=".9"/>
-      </svg>
+          <g transform="translate(70,34) scale(.9)"><ellipse cx="0" cy="0" rx="12" ry="16" fill="#ff3b55"/><path d="M-9 -10 C -11 -16, 11 -16, 9 -10" fill="#2fb64a"/></g>
+          <g transform="translate(130,28) scale(1)"><ellipse cx="0" cy="0" rx="14" ry="19" fill="#ff3b55"/><path d="M-10 -11 C -13 -18, 13 -18, 10 -11" fill="#32b64a"/></g>
+          <g transform="translate(190,38) scale(.85)"><ellipse cx="0" cy="0" rx="11" ry="14" fill="#ff3b55"/><path d="M-8 -9 C -11 -14, 11 -14, 8 -9" fill="#39b64a"/></g>
+        </svg>
+        <div class="ownerBadge" id="ownerBadge" style="display:none;"></div>
+      </div>
+
+      <div class="msg" id="msg">輕點蛋糕，收集小驚喜 ✨</div>
     </div>
 
-    <div class="msg">💖 呢到有士多啤利雨同超好食既蛋糕，歡迎享用！</div>
-
-    <div class="controls">
-      <button class="button" id="sayHungry">點我一下 🍴</button>
-    </div>
   </div>
 
-  <!-- 下面的 JS 會產生完全內嵌的草莓 SVG，並在畫面任意位置產生掉落動畫 -->
-  <script>
-    // 內嵌草莓 SVG 字串（不用外部圖片）
-    const strawberrySVG = `
-    <svg viewBox="0 0 50 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <g transform="translate(0,0)">
-        <!-- 草莓身體 -->
-        <ellipse cx="25" cy="30" rx="18" ry="22" fill="#ff3b55"/>
-        <!-- 葉子 -->
-        <path d="M25 10 C 18 14, 8 10, 12 6 C 6 8, 6 14, 14 12 C 10 18, 18 20, 25 14 C 32 20, 40 18, 36 12 C 44 14, 44 8, 38 6 C 42 10, 32 14, 25 10 Z" fill="#29b84a"/>
-        <!-- 小籽 -->
-        <circle cx="20" cy="28" r="1.2" fill="#fff7a8" opacity="0.95"/>
-        <circle cx="28" cy="33" r="1.05" fill="#fff7a8" opacity="0.95"/>
-        <circle cx="22" cy="36" r="0.95" fill="#fff7a8" opacity="0.95"/>
-        <circle cx="30" cy="25" r="0.95" fill="#fff7a8" opacity="0.95"/>
-        <!-- 高光 -->
-        <ellipse cx="18" cy="20" rx="3.2" ry="5.2" fill="#ffffff" opacity="0.25"/>
-      </g>
-    </svg>`;
+<script>
+/* ---------------------------
+   QQ-style 可愛文字與 emoji 列表（不表白）
+----------------------------*/
+const qqPhrases = [
+  "好Q～ (´▽｀)", "Q_Q 好可愛", "好Q好想咬一口～", "ˊᵕˋ 好治癒", "哇～好夢幻 o(≧▽≦)o", "好想偷吃一口 QwQ",
+  "超可愛～ʕ•ᴥ•ʔ", "好少女心～", "萌到冒泡～", "好想一起吃🍰"
+];
+const emojis = ["🍓","✨","🍬","🌸","🍪"];
 
-    // 控制參數：可以改這裡調整下雨密度與速度
-    const SPAWN_INTERVAL_MS = 400; // 每顆草莓間隔（毫秒），數字越小雨越密
-    const MAX_SIMULTANEOUS = 24;   // 同時存在的草莓上限（避免卡）
-    const MIN_DURATION = 2.0;      // 掉落最短秒數
-    const MAX_DURATION = 4.2;      // 掉落最長秒數
+/* personalization via URL param: ?to=小名 */
+function getParam(name){
+  try{ const u = new URL(location.href); return u.searchParams.get(name); }catch(e){ return null; }
+}
+const toName = getParam('to');
+if(toName){
+  const badge = document.getElementById('ownerBadge');
+  badge.textContent = `特別為 ${toName} 準備`;
+  badge.style.display = 'block';
+  document.getElementById('msg').textContent = `輕點給 ${toName} 的小驚喜 ✨`;
+}
 
-    let raining = true;
-    const active = new Set();
+/* audio lightly (disabled until user interacts) */
+let audioReady=false;
+function playTiny(freq,dur=0.05){ try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); const o=ctx.createOscillator(); const g=ctx.createGain(); o.type='sine'; o.frequency.value=freq; g.gain.value=0.02; o.connect(g); g.connect(ctx.destination); o.start(); setTimeout(()=>{ o.stop(); ctx.close(); }, dur*1000);}catch(e){} }
 
-    function makeFallingStrawberry() {
-      // 如超過上限就不繼續生成
-      if (active.size >= MAX_SIMULTANEOUS) return;
+/* strawberry SVG */
+const strawberrySVG = `<svg viewBox="0 0 50 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><ellipse cx="25" cy="30" rx="18" ry="22" fill="#ff3b55"/><path d="M25 10 C 18 14, 8 10, 12 6 C 6 8, 6 14, 14 12 C 10 18, 18 20, 25 14 C 32 20, 40 18, 36 12 C 44 14, 44 8, 38 6 C 42 10, 32 14, 25 10 Z" fill="#29b84a"/><ellipse cx="17" cy="18" rx="3" ry="5" fill="#fff" opacity="0.22"/></svg>`;
 
-      const wrapper = document.createElement('div');
-      wrapper.className = 'falling-strawberry';
-      // 隨機水平位置（小幅偏移避免貼邊）
-      wrapper.style.left = (Math.random() * 92 + 2) + 'vw';
-      // 隨機寬度縮放（讓大小多樣）
-      const sizeScale = (Math.random() * 0.6) + 0.75; // 0.75 ~ 1.35
-      wrapper.style.width = (56 * sizeScale) + 'px';
-      // 隨機動畫時長
-      const dur = (MIN_DURATION + Math.random() * (MAX_DURATION - MIN_DURATION)).toFixed(2) + 's';
-      wrapper.style.setProperty('--dur', dur);
-      // 內嵌 svg
-      wrapper.innerHTML = strawberrySVG;
+const activeSet = new Set();
+function spawnStrawberry(){
+  if(activeSet.size > 36) return;
+  const el=document.createElement('div'); el.className='falling'; el.innerHTML=strawberrySVG;
+  el.style.left = (Math.random()*86 + 6) + 'vw';
+  const scale = (Math.random()*0.55) + 0.75; el.style.width = (52*scale) + 'px';
+  const dur = (2.8 + Math.random()*2.2); el.style.animationDuration = dur+'s';
+  document.body.appendChild(el); activeSet.add(el);
+  el.addEventListener('animationend', ()=>{
+    // landing -> maybe heart sparkle
+    el.style.transition='transform .25s ease, opacity .28s ease'; el.style.transform+=' translateY(8px) scale(.92)'; el.style.opacity='0.92';
+    if(Math.random() < 0.28){ const heart=document.createElement('div'); heart.className='particle'; heart.textContent='💖'; const r=el.getBoundingClientRect(); heart.style.left=(r.left + r.width/2)+'px'; heart.style.top=(window.innerHeight - 78)+'px'; document.body.appendChild(heart); setTimeout(()=>heart.remove(),1000); if(audioReady) playTiny(520,0.05); }
+    else if(Math.random() < 0.22){ const s=document.createElement('div'); s.className='spark'; const r=el.getBoundingClientRect(); s.style.left=(r.left + r.width/2)+'px'; s.style.top=(window.innerHeight - 78)+'px'; s.style.width=s.style.height=(4 + Math.random()*4)+'px'; document.body.appendChild(s); setTimeout(()=>s.remove(),1100 + Math.random()*900); }
+    setTimeout(()=>{ el.remove(); activeSet.delete(el); },420);
+  }, {once:true});
+}
+setInterval(spawnStrawberry, 380);
 
-      // 小隨機左右搖擺（用 CSS transform 初始位移 + 在動畫中旋轉）
-      wrapper.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
+/* background sparkles */
+for(let i=0;i<24;i++){ const s=document.createElement('div'); s.className='spark'; s.style.left=(Math.random()*100)+'vw'; s.style.top=(Math.random()*100)+'vh'; s.style.animationDuration=(1.6 + Math.random()*2.2)+'s'; s.style.opacity=(0.25 + Math.random()*0.9); s.style.width=s.style.height=(3 + Math.random()*6)+'px'; document.body.appendChild(s); }
 
-      document.body.appendChild(wrapper);
-      active.add(wrapper);
+/* click particle */
+const cake = document.getElementById('cake'); let clicks=0; let inSuper=false;
+function spawnParticle(x,y){ const p=document.createElement('div'); p.className='particle'; if(Math.random() < 0.6){ p.textContent = qqPhrases[Math.floor(Math.random()*qqPhrases.length)]; p.style.fontSize = (14 + Math.random()*10) + 'px'; } else { p.textContent = emojis[Math.floor(Math.random()*emojis.length)]; p.style.fontSize = (18 + Math.random()*10) + 'px'; }
+ p.style.left = (x + (Math.random()*48 - 24)) + 'px'; p.style.top = (y + (Math.random()*36 - 18)) + 'px'; document.body.appendChild(p); setTimeout(()=>p.remove(),1050); }
 
-      // 當動畫結束，做個輕微「落地彈」效果再移除（用 JS）
-      wrapper.addEventListener('animationend', () => {
-        // 輕微縮放與慢淡出，然後移除
-        wrapper.style.transition = 'transform .28s ease, opacity .32s ease';
-        wrapper.style.transform += ' translateY(6px) scale(.92)';
-        wrapper.style.opacity = '0.85';
-        setTimeout(() => {
-          wrapper.remove();
-          active.delete(wrapper);
-        }, 350);
-      }, { once:true });
-    }
+function firework(cx,cy){ const cols=['#ffd6e6','#fff7a8','#ffd9f0','#b3f5ff','#ffd3a6']; for(let i=0;i<14;i++){ const f=document.createElement('div'); f.className='firework'; f.style.left=cx+'px'; f.style.top=cy+'px'; f.style.background=cols[i%cols.length]; f.style.animationDuration = (700 + Math.random()*500) + 'ms'; document.body.appendChild(f); setTimeout(()=>f.remove(),1100); } }
 
-    // 自動下草莓雨（開啟/暫停）
-    let spawnInterval = null;
-    function startRain(){
-      if (spawnInterval) clearInterval(spawnInterval);
-      spawnInterval = setInterval(() => {
-        if (raining) makeFallingStrawberry();
-      }, SPAWN_INTERVAL_MS);
-    }
-    function stopRain(){
-      if (spawnInterval) clearInterval(spawnInterval);
-      spawnInterval = null;
-    }
+function superMode(){ inSuper=true; cake.classList.add('super'); const rect=cake.getBoundingClientRect(); const cx=rect.left + rect.width/2; const cy=rect.top + rect.height/2; for(let k=0;k<4;k++){ setTimeout(()=>firework(cx + rnd(-40,40), cy + rnd(-10,50)), k*180); }
+ const ring=document.createElement('div'); ring.style.position='fixed'; ring.style.left=(rect.left + rect.width/2 - rect.width*0.9/2)+'px'; ring.style.top=(rect.top + rect.height/2 - rect.height*0.9/2)+'px'; ring.style.width=(rect.width*0.9)+'px'; ring.style.height=(rect.height*0.9)+'px'; ring.style.borderRadius='16px'; ring.style.zIndex=22; ring.style.pointerEvents='none'; ring.style.background='conic-gradient(from 120deg, rgba(255,160,200,0.28), rgba(255,240,170,0.24), rgba(160,230,255,0.22), rgba(230,200,255,0.18))'; ring.style.filter='blur(22px)'; ring.style.opacity='0.9'; document.body.appendChild(ring); setTimeout(()=>{ ring.remove(); cake.classList.remove('super'); inSuper=false; clicks=0; },4200);
+}
 
-    // 啟動（DOM ready）
-    document.addEventListener('DOMContentLoaded', () => {
-      startRain(); // 自動開始下草莓雨
-    });
+/* helper rnd */
+function rnd(a,b){ return a + Math.random()*(b-a); }
 
-    // 按鈕事件：讓「女友」說話（彈出提示）
-    document.getElementById('sayHungry').addEventListener('click', () => {
-      alert('希望倒數完之前整得完 🍓🍰💞');
-    });
+function onCakeClick(e){ if(!audioReady){ audioReady=true; playTiny(660,0.05); }
+ cake.classList.add('pop'); setTimeout(()=>cake.classList.remove('pop'),160);
+ for(let i=0;i<6;i++){ setTimeout(()=>spawnParticle(e.clientX, e.clientY), i*60); }
+ if(audioReady) playTiny(760 - Math.random()*140,0.05);
+ clicks++; if(clicks === 10 && !inSuper){ superMode(); }
+}
 
-    // 暫停 / 繼續草莓雨
-    document.getElementById('toggleRain').addEventListener('click', (e) => {
-      raining = !raining;
-      e.currentTarget.textContent = raining ? '暫停草莓雨' : '繼續草莓雨';
-      // 若已經暫停，也可以把畫面上剩下的草莓慢慢清掉（選擇性）
-      if (!raining){
-        // 清除現有（維持幾顆動畫完畢後自動移除）
-        // optional: 不立即強制刪除，保留逐個落下的效果
-      }
-    });
+cake.addEventListener('click', onCakeClick);
+cake.addEventListener('mouseenter', ()=>{ cake.style.transform='translateY(-4px)'; });
+cake.addEventListener('mouseleave', ()=>{ cake.style.transform=''; });
 
-    // 如果你想在頁面載入時立刻產生幾顆草莓（更密集），取消下面注解
-    // for(let i=0;i<6;i++){ setTimeout(makeFallingStrawberry, i*120); }
+// accessibility
+cake.setAttribute('tabindex','0'); cake.addEventListener('keydown',(e)=>{ if(e.key==='Enter' || e.key===' ') { const r=cake.getBoundingClientRect(); onCakeClick({ clientX: r.left + r.width/2, clientY: r.top + r.height/2 }); } });
 
-    // Expose helper to console (方便你在開發者工具手動調整)
-    window._strawberryHelpers = {
-      makeFallingStrawberry,
-      startRain,
-      stopRain,
-      setDensity(ms){ SPAWN_INTERVAL_MS = ms; stopRain(); startRain(); }
-    };
-  </script>
+// double-tap quick burst mobile
+let lastTap=0; document.addEventListener('touchstart',(ev)=>{ const now=Date.now(); if(now - lastTap < 280){ for(let i=0;i<6;i++) setTimeout(spawnStrawberry, i*60); } lastTap = now; });
+
+// safety purge
+setInterval(()=>{ if(activeSet.size > 70){ const arr=Array.from(activeSet); for(let i=0;i<12 && arr[i]; i++){ arr[i].remove(); activeSet.delete(arr[i]); } } }, 2000);
+
+</script>
 </body>
 </html>
