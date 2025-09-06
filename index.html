@@ -3,215 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>草莓奶油蛋糕</title>
+    <title>3D立體草莓奶油蛋糕</title>
     <style>
+        :root {
+            --cake-height: 80px; /* 定義蛋糕的高度變數 */
+            --cake-diameter: 250px; /* 定義蛋糕的直徑變數 */
+        }
+
         body {
-            background-color: #f8f8f8;
+            background-color: #e3e3e3;
             font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            perspective: 1200px; /* 視角，數值越小，3D效果越誇張 */
         }
 
-        .cake-container {
-            width: 350px;
-            height: 450px;
+        .cake-stage {
+            /* 這是整個3D場景的容器 */
+            transform-style: preserve-3d;
+            transform: rotateX(60deg) rotateZ(30deg); /* 調整蛋糕的傾斜角度 */
+        }
+
+        .cake-board {
+            width: 380px;
+            height: 380px;
             background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2), 0 0 0 10px #f8f8f8;
             border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 40px;
             position: relative;
+            transform: translateZ(-2px); /* 讓底板在蛋糕下方 */
         }
 
         .cake {
-            width: 250px;
-            height: 250px;
-            background-color: #fff;
-            border-radius: 50%;
-            border: 1px solid #eee;
-            position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            width: var(--cake-diameter);
+            height: var(--cake-diameter);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: calc(var(--cake-diameter) / -2);
+            margin-top: calc(var(--cake-diameter) / -2);
+            transform-style: preserve-3d;
         }
 
+        /* 蛋糕的頂部 */
         .cake-top {
-            position: absolute;
             width: 100%;
             height: 100%;
+            background: #fff;
+            background-image: radial-gradient(circle, #ffffff 80%, #fdfdfd 100%); /* 頂部加一點點放射狀漸層，模擬光照 */
             border-radius: 50%;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            justify-items: center;
-            align-items: center;
+            position: absolute;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            /* 關鍵：將頂部沿Z軸上移，形成厚度 */
+            transform: translateZ(var(--cake-height));
         }
-
+        
+        /* 蛋糕的側面 (用一個長條形元素旋轉包裹而成) */
+        .cake-side {
+            width: 100%;
+            height: var(--cake-height);
+            background: linear-gradient(to right, #f5f5f5, #ffffff, #f5f5f5); /* 側面用線性漸層模擬圓柱體光影 */
+            position: absolute;
+            top: calc(50% - var(--cake-height) / 2);
+            /* 關鍵：沿X軸旋轉90度，讓它立起來，再往前推，形成圓柱的弧面 */
+            transform: rotateX(90deg) translateZ(calc(var(--cake-diameter) / 2));
+        }
+        
+        /* 蛋糕頂部的格線 */
         .grid-lines {
             position: absolute;
-            width: 150px;
-            height: 150px;
-            top: 50px;
-            left: 50px;
+            width: 60%;
+            height: 60%;
+            top: 20%;
+            left: 20%;
+            border: 1px solid #f0f0f0;
         }
-
-        .line {
+        .grid-lines::before, .grid-lines::after {
+            content: '';
             position: absolute;
             background-color: #f0f0f0;
         }
-
-        .h-line {
+        .grid-lines::before { /* 橫線 */
             width: 100%;
             height: 1px;
             top: 50%;
         }
-
-        .v-line {
+        .grid-lines::after { /* 直線 */
             width: 1px;
             height: 100%;
             left: 50%;
         }
 
-        .strawberry {
+        /* 草莓 */
+        .strawberry-container {
+            position: absolute;
             width: 40px;
             height: 45px;
+            /* 關鍵：讓草莓也進入3D空間 */
+            transform-style: preserve-3d; 
+            /* 關鍵：稍微上移Z軸，並旋轉，讓它"立"在蛋糕上 */
+            transform: translateZ(5px) rotateX(-20deg); 
+            filter: drop-shadow(3px 3px 3px rgba(0,0,0,0.2)); /* 使用drop-shadow產生更真實的投影 */
+        }
+        .strawberry {
+            width: 100%;
+            height: 100%;
             background-color: #d92e4a;
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            position: relative;
             transform: rotate(-45deg);
         }
 
-        .strawberry::before {
-            content: '';
-            position: absolute;
-            width: 6px;
-            height: 10px;
-            background-color: #3e8e41;
-            border-radius: 0 100% 0 0;
-            left: 17px;
-            top: -3px;
-            transform: rotate(45deg);
-        }
-
-        .s1 { grid-column: 2; grid-row: 1; transform: translateY(5px);}
-        .s2 { grid-column: 1; grid-row: 2; transform: translateX(5px);}
-        .s3 { grid-column: 3; grid-row: 2; transform: translateX(-5px);}
-        .s4 { grid-column: 2; grid-row: 3; transform: translateY(-5px);}
-        .s5 { grid-column: 1; grid-row: 1; transform: translate(15px, 15px);}
-        .s6 { grid-column: 3; grid-row: 1; transform: translate(-15px, 15px);}
-        .s7 { grid-column: 3; grid-row: 3; transform: translate(-15px, -15px);}
-
-
-        .cake-side {
-            width: 280px;
-            height: 120px;
-            background-color: #fff;
-            margin-top: -60px;
-            z-index: -1;
-            border-left: 1px solid #eee;
-            border-right: 1px solid #eee;
-            position: relative;
-            padding: 0 10px;
-        }
+        /* 草莓定位 */
+        .s1 { top: 15%; left: calc(50% - 20px); }
+        .s2 { top: calc(50% - 22.5px); left: 15%; }
+        .s3 { top: calc(50% - 22.5px); right: 15%; }
+        .s4 { bottom: 15%; left: calc(50% - 20px); }
+        .s5 { top: 25%; left: 25%; }
+        .s6 { top: 25%; right: 25%; }
+        .s7 { bottom: 25%; right: 25%; }
         
+        /* 擠花奶油 (用 text-shadow 增加立體感) */
         .piping {
             position: absolute;
             width: 100%;
-            left: 0;
-            text-align: center;
-        }
-
-        .top-piping {
-            top: -125px;
-            font-size: 20px;
-            color: #d92e4a;
-        }
-
-        .bottom-piping {
-            bottom: -5px;
-            font-size: 20px;
-            color: #d92e4a;
-        }
-
-        .cherry-pattern {
-            position: absolute;
-            bottom: 30px;
-            width: 280px;
-            left: 10px;
-            display: flex;
-            justify-content: space-around;
-        }
-
-        .cherry {
-            font-size: 14px;
-            color: #d92e4a;
-        }
-        .cherry::before {
-            content: '☘';
-            color: #3e8e41;
-            font-size: 10px;
-            position: relative;
-            top: -2px;
-            left: 1px;
-        }
-        
-        .brand {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background-color: #e0f7fa;
+            height: 100%;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 10px;
-            color: #00838f;
-            font-weight: bold;
         }
+        .piping-dot {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background-color: #d92e4a;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* 手動定位每一個擠花點 */
+        .p1 { top: -2%; left: 46%; }
+        .p2 { top: 8%; left: 18%; }
+        .p3 { top: 8%; right: 18%; }
+        .p4 { top: 28%; left: 2%; }
+        .p5 { top: 28%; right: 2%; }
+        .p6 { top: 46%; left: -2%; }
+        .p7 { top: 46%; right: -2%; }
+        .p8 { bottom: 28%; left: 2%; }
+        .p9 { bottom: 28%; right: 2%; }
+        .p10 { bottom: 8%; left: 18%; }
+        .p11 { bottom: 8%; right: 18%; }
+        .p12 { bottom: -2%; left: 46%; }
+
 
     </style>
 </head>
 <body>
 
-    <div class="cake-container">
-        <div class="piping top-piping">
-            &#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;
-        </div>
-        <div class="cake">
-            <div class="cake-top">
-                <div class="grid-lines">
-                    <div class="line h-line"></div>
-                    <div class="line v-line"></div>
+    <div class="cake-stage">
+        <div class="cake-board">
+            <div class="cake">
+                <div class="cake-side"></div>
+                <div class="cake-top">
+                    <div class="grid-lines"></div>
+                    <div class="strawberry-container s1"><div class="strawberry"></div></div>
+                    <div class="strawberry-container s2"><div class="strawberry"></div></div>
+                    <div class="strawberry-container s3"><div class="strawberry"></div></div>
+                    <div class="strawberry-container s4"><div class="strawberry"></div></div>
+                    <div class="strawberry-container s5"><div class="strawberry"></div></div>
+                    <div class="strawberry-container s6"><div class="strawberry"></div></div>
+                    <div class="strawberry-container s7"><div class="strawberry"></div></div>
+
+                    <div class="piping">
+                        <div class="piping-dot p1"></div><div class="piping-dot p2"></div>
+                        <div class="piping-dot p3"></div><div class="piping-dot p4"></div>
+                        <div class="piping-dot p5"></div><div class="piping-dot p6"></div>
+                        <div class="piping-dot p7"></div><div class="piping-dot p8"></div>
+                        <div class="piping-dot p9"></div><div class="piping-dot p10"></div>
+                        <div class="piping-dot p11"></div><div class="piping-dot p12"></div>
+                        </div>
                 </div>
-                <div class="strawberry-container s1"><div class="strawberry"></div></div>
-                <div class="strawberry-container s2"><div class="strawberry"></div></div>
-                <div class="strawberry-container s3"><div class="strawberry"></div></div>
-                <div class="strawberry-container s4"><div class="strawberry"></div></div>
-                <div class="strawberry-container s5"><div class="strawberry"></div></div>
-                <div class="strawberry-container s6"><div class="strawberry"></div></div>
-                <div class="strawberry-container s7"><div class="strawberry"></div></div>
             </div>
-        </div>
-        <div class="cake-side">
-             <div class="cherry-pattern">
-                <div class="cherry">🍒</div>
-                <div class="cherry">🍒</div>
-                <div class="cherry">🍒</div>
-                <div class="cherry">🍒</div>
-                <div class="cherry">🍒</div>
-                <div class="cherry">🍒</div>
-             </div>
-        </div>
-        <div class="piping bottom-piping">
-            &#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;&#x25CF;
-        </div>
-        <div class="brand">
-            Sweet<br>Creations
         </div>
     </div>
 
