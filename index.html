@@ -1,192 +1,299 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>一份專屬妳的宵夜菜單</title>
-    <style>
-        /* --- Google Fonts --- */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500&family=Zhi+Mang+Xing&display=swap');
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>🍓 李的烘焙坊🍰</title>
+  <style>
+    :root{
+      --bg1:#ffe6f0; --bg2:#fff5e6;
+      --accent:#ff4d88;
+    }
+    html,body{height:100%; margin:0;}
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      text-align: center;
+      overflow: hidden; /* 不要出現捲軸 */
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      user-select:none;
+    }
 
-        /* 色調版 (Color Palette):
-        背景: #FFFBF7 (溫暖米白)
-        文字: #4E4440 (深可可色)
-        點綴粉: #FFC8D1 (草莓奶昔粉)
-        點綴黃: #FFF5B8 (奶油黃)
-        按鈕/高光: #FF8A8A (珊瑚西瓜紅)
-        */
+    h1{
+      margin: 36px 0 10px;
+      color:var(--accent);
+      font-size:2.6rem;
+      animation: bounce 1s infinite alternate;
+    }
+    @keyframes bounce{
+      from {transform: translateY(0);}
+      to {transform: translateY(-8px);}
+    }
 
-        /* --- 整體風格 --- */
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #FFFBF7;
-            color: #4E4440;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            overflow-x: hidden;
-        }
+    .scene {
+      position: relative;
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      z-index: 10;
+    }
 
-        /* --- 動畫: 滾動淡入效果 --- */
-        .reveal {
-            position: relative;
-            transform: translateY(60px);
-            opacity: 0;
-            transition: all 1s cubic-bezier(0.390, 0.575, 0.565, 1.000);
-        }
+    .cake {
+      width: 260px;
+      margin: 18px auto;
+      position: relative;
+      z-index: 20;
+      animation: wiggle 1.6s infinite ease-in-out;
+    }
+    @keyframes wiggle{
+      0%{ transform: rotate(0deg); }
+      25%{ transform: rotate(2deg); }
+      50%{ transform: rotate(-2deg); }
+      100%{ transform: rotate(0deg); }
+    }
 
-        .reveal.visible {
-            transform: translateY(0);
-            opacity: 1;
-        }
+    .msg {
+      font-size: 1.6rem;
+      color: #ff6699;
+      margin-top: 10px;
+      animation: glow 1.6s infinite alternate;
+    }
+    @keyframes glow {
+      from { text-shadow: 0 0 4px #ffd0e0; }
+      to { text-shadow: 0 0 12px #ff88b3; }
+    }
 
-        /* --- 頁首 --- */
-        .header {
-            padding: 40px 20px 20px 20px;
-        }
+    .controls {
+      margin-top: 18px;
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      align-items:center;
+    }
 
-        .header h1 {
-            font-family: 'Zhi Mang Xing', cursive;
-            font-size: 3.5rem;
-            color: #FF8A8A;
-            margin: 0;
-            line-height: 1.2;
-        }
+    .button {
+      background: linear-gradient(180deg,#ff9ab3,#ff6a90);
+      color:white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 24px;
+      font-size:1.05rem;
+      cursor:pointer;
+      box-shadow: 0 6px 14px rgba(255,80,120,0.15);
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .button:active{ transform: translateY(2px) scale(.99); }
+    .small {
+      background: transparent;
+      border: 2px dashed rgba(255,90,140,0.25);
+      color: var(--accent);
+      padding:8px 12px;
+      border-radius: 12px;
+    }
 
-        .header p {
-            font-size: 1.1rem;
-            margin-top: 10px;
-        }
+    /* ---------- 草莓雨（整個畫面生成的容器元素） ---------- */
+    .falling-strawberry {
+      position: fixed;
+      top: -120px;
+      width: 56px;              /* 設定 SVG 的顯示大小 */
+      height: auto;
+      pointer-events: none;
+      z-index: 5;
+      transform-origin: center;
+      /* 使用 CSS 變數來控制單顆時間，JS 會設定 --dur */
+      animation: fall var(--dur, 3.5s) linear forwards;
+      will-change: transform, opacity;
+    }
 
-        /* --- 蛋糕卡片 --- */
-        .cake-card {
-            max-width: 700px;
-            margin: 50px auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(211, 187, 175, 0.4);
-            padding: 25px;
-            box-sizing: border-box;
-        }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg) scale(1); opacity:1; }
+      85% { transform: translateY(98vh) rotate(360deg) scale(0.95); opacity:1; }
+      100% { transform: translateY(110vh) rotate(720deg) scale(0.85); opacity:0.92; }
+    }
 
-        .cake-card img {
-            width: 100%;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
+    /* 裝飾用小草莓（cake 上） */
+    .deco-strawberry { width:44px; height:auto; display:inline-block; vertical-align:middle; }
 
-        .cake-card h2 {
-            font-family: 'Zhi Mang Xing', cursive;
-            font-size: 2.8rem;
-            margin: 10px 0;
-        }
-        
-        #strawberry h2 { color: #FF8A8A; }
-        #chiffon h2 { color: #e6bf39; }
+    /* 小提醒字 */
+    .hint { font-size: .9rem; color:#cc6a86; margin-top:6px; opacity:0.9; }
 
-
-        .cake-card p {
-            font-size: 1rem;
-            line-height: 1.9;
-            text-align: left;
-            padding: 0 15px;
-        }
-
-        /* --- 可愛的分隔線 --- */
-        .wavy-divider {
-            margin: 40px 0;
-            color: #FFC8D1; /* 草莓奶昔粉 */
-        }
-        
-        /* --- 結尾互動區 --- */
-        .final-prompt {
-            padding: 50px 20px 80px 20px;
-            background-color: #FFF5B8; /* 奶油黃背景 */
-        }
-
-        .final-prompt h3 {
-            font-family: 'Zhi Mang Xing', cursive;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-        }
-
-        .hungry-button {
-            font-family: 'Noto Sans TC', sans-serif;
-            font-weight: 500;
-            font-size: 1.3rem;
-            background-color: #FF8A8A;
-            color: white;
-            border: none;
-            padding: 15px 35px;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 138, 138, 0.6);
-            transition: all 0.3s ease;
-        }
-
-        .hungry-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 8px 20px rgba(255, 138, 138, 0.8);
-        }
-        
-        /* 手機版適應 */
-        @media (max-width: 768px) {
-            .header h1 { font-size: 2.8rem; }
-            .cake-card { margin: 30px 15px; padding: 20px; }
-            .cake-card h2 { font-size: 2.2rem; }
-        }
-
-    </style>
+    /* 可調整最多同時出現數量、響應式等 */
+    @media (max-width:520px){
+      .cake{ width:180px; }
+      .falling-strawberry { width:40px; }
+      h1{ font-size:1.8rem; }
+      .msg{ font-size:1.25rem; }
+    }
+  </style>
 </head>
 <body>
+  <h1>🍓 呢到有全澳門最好食嘅士多啤利蛋糕 🍰</h1>
 
-    <header class="header reveal">
-        <h1>宵夜想吃這個嗎？</h1>
-        <p>滑下來看看我發現了什麼好吃的～</p>
-    </header>
+  <div class="scene">
+    <div class="cake" aria-hidden="true">
+      <!-- 完全內嵌的 SVG 蛋糕（無外部資源） -->
+      <svg viewBox="0 0 220 140" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="草莓蛋糕插畫">
+        <!-- 盤子 -->
+        <ellipse cx="110" cy="128" rx="82" ry="10" fill="#fff1f6" stroke="#ffd7e8" />
+        <!-- 底層蛋糕體 -->
+        <rect x="32" y="70" rx="18" ry="18" width="156" height="56" fill="#ffd6e0" stroke="#ffb6ce"/>
+        <!-- 鮮奶油層 -->
+        <path d="M32 70 Q56 48 80 70 T128 70 T176 70 T188 70 L188 74 Q166 92 132 74 T80 74 T32 74 Z" fill="#fff0f6" opacity="0.95"/>
+        <!-- 上層奶油圓頂 -->
+        <ellipse cx="110" cy="56" rx="62" ry="34" fill="#fff4fb" stroke="#ffd9ea"/>
+        <!-- 草莓（擺在蛋糕上） -->
+        <!-- 我用同樣的向量草莓造型小圖示 -->
+        <g transform="translate(60,33) scale(0.9)">
+          <g>
+            <ellipse cx="0" cy="0" rx="10" ry="14" fill="#ff3b55"/>
+            <path d="M-7 -8 C -9 -14, 9 -14, 7 -8 L 7 -8 L -7 -8 Z" fill="#3db64a"/>
+            <circle cx="-2" cy="-1" r="0.8" fill="#fff8b0" />
+            <circle cx="3" cy="1.5" r="0.7" fill="#fff8b0" />
+          </g>
+        </g>
 
-    <main>
-        <section id="strawberry" class="cake-card reveal">
-            <img src="https://images.pexels.com/photos/1854037/pexels-photo-1854037.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="看起來超鬆軟的草莓蛋糕">
-            <h2>草莓奶油小可愛</h2>
-            <p>你看！這個蛋糕看起來是不是像一朵軟綿綿的雲！上面鋪滿了最新鮮的草莓，還有甜甜的奶油。想像一下，用叉子輕輕切下去，那種蓬鬆的感覺... 感覺吃一口，今天所有的煩惱都會不見了！</p>
-        </section>
+        <g transform="translate(110,26) scale(1)">
+          <g>
+            <ellipse cx="0" cy="0" rx="12" ry="17" fill="#ff3b55"/>
+            <path d="M-9 -10 C -11 -17, 11 -17, 9 -10 L 9 -10 L -9 -10 Z" fill="#2fb64a"/>
+            <circle cx="-3" cy="-1" r="0.9" fill="#fff8b0" />
+            <circle cx="4" cy="1.8" r="0.75" fill="#fff8b0" />
+          </g>
+        </g>
 
-        <svg class="wavy-divider reveal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
-            <path d="M1440,50 C1080,100 720,0 360,50 C180,75 0,50 0,50 L0,100 L1440,100 Z" fill="currentColor"></path>
-        </svg>
-        
-        <section id="chiffon" class="cake-card reveal">
-            <img src="https://images.pexels.com/photos/179835/pexels-photo-179835.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="烤得金黃色的戚風蛋糕">
-            <h2>暖呼呼的太陽蛋糕</h2>
-            <p>還有這個！一個烤得金黃色、像小太陽一樣的戚風蛋糕。它看起來超級無敵鬆軟，好像輕輕一按就會彈回來。聞起來一定有那種暖暖的雞蛋和牛奶的香味，最適合在晚上吃了，感覺心和胃都會一起被治癒～</p>
-        </section>
+        <g transform="translate(160,36) scale(0.85)">
+          <g>
+            <ellipse cx="0" cy="0" rx="9.5" ry="13" fill="#ff3b55"/>
+            <path d="M-6 -8 C -8 -13, 8 -13, 6 -8 L 6 -8 L -6 -8 Z" fill="#39b64a"/>
+            <circle cx="-2" cy="-0.5" r="0.7" fill="#fff8b0" />
+            <circle cx="3" cy="1.2" r="0.6" fill="#fff8b0" />
+          </g>
+        </g>
 
-        <section class="final-prompt reveal">
-            <h3>看完... 是不是肚子餓了？</h3>
-            <button class="hungry-button">好餓！(๑>ڡ<๑)</button>
-        </section>
-    </main>
+        <!-- 小亮點 -->
+        <circle cx="86" cy="82" r="1.2" fill="#ffffff" opacity=".9"/>
+        <circle cx="130" cy="70" r="1.2" fill="#ffffff" opacity=".9"/>
+      </svg>
+    </div>
 
-    <script>
-        // 這個小小的script是為了讓元素滾動到畫面時，才優雅地出現
-        function revealElements() {
-            const reveals = document.querySelectorAll('.reveal');
+    <div class="msg">💖 呢到有士多啤利雨同超好食既蛋糕，歡迎享用！</div>
 
-            for (let i = 0; i < reveals.length; i++) {
-                const windowHeight = window.innerHeight;
-                const elementTop = reveals[i].getBoundingClientRect().top;
-                const elementVisible = 100; // 元素露出100px就觸發
+    <div class="controls">
+      <button class="button" id="sayHungry">點我一下 🍴</button>
+    </div>
+  </div>
 
-                if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add('visible');
-                }
-            }
-        }
+  <!-- 下面的 JS 會產生完全內嵌的草莓 SVG，並在畫面任意位置產生掉落動畫 -->
+  <script>
+    // 內嵌草莓 SVG 字串（不用外部圖片）
+    const strawberrySVG = `
+    <svg viewBox="0 0 50 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g transform="translate(0,0)">
+        <!-- 草莓身體 -->
+        <ellipse cx="25" cy="30" rx="18" ry="22" fill="#ff3b55"/>
+        <!-- 葉子 -->
+        <path d="M25 10 C 18 14, 8 10, 12 6 C 6 8, 6 14, 14 12 C 10 18, 18 20, 25 14 C 32 20, 40 18, 36 12 C 44 14, 44 8, 38 6 C 42 10, 32 14, 25 10 Z" fill="#29b84a"/>
+        <!-- 小籽 -->
+        <circle cx="20" cy="28" r="1.2" fill="#fff7a8" opacity="0.95"/>
+        <circle cx="28" cy="33" r="1.05" fill="#fff7a8" opacity="0.95"/>
+        <circle cx="22" cy="36" r="0.95" fill="#fff7a8" opacity="0.95"/>
+        <circle cx="30" cy="25" r="0.95" fill="#fff7a8" opacity="0.95"/>
+        <!-- 高光 -->
+        <ellipse cx="18" cy="20" rx="3.2" ry="5.2" fill="#ffffff" opacity="0.25"/>
+      </g>
+    </svg>`;
 
-        window.addEventListener('scroll', revealElements);
-        revealElements(); // 讓頁面一載入就檢查一次
-    </script>
+    // 控制參數：可以改這裡調整下雨密度與速度
+    const SPAWN_INTERVAL_MS = 400; // 每顆草莓間隔（毫秒），數字越小雨越密
+    const MAX_SIMULTANEOUS = 24;   // 同時存在的草莓上限（避免卡）
+    const MIN_DURATION = 2.0;      // 掉落最短秒數
+    const MAX_DURATION = 4.2;      // 掉落最長秒數
 
+    let raining = true;
+    const active = new Set();
+
+    function makeFallingStrawberry() {
+      // 如超過上限就不繼續生成
+      if (active.size >= MAX_SIMULTANEOUS) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'falling-strawberry';
+      // 隨機水平位置（小幅偏移避免貼邊）
+      wrapper.style.left = (Math.random() * 92 + 2) + 'vw';
+      // 隨機寬度縮放（讓大小多樣）
+      const sizeScale = (Math.random() * 0.6) + 0.75; // 0.75 ~ 1.35
+      wrapper.style.width = (56 * sizeScale) + 'px';
+      // 隨機動畫時長
+      const dur = (MIN_DURATION + Math.random() * (MAX_DURATION - MIN_DURATION)).toFixed(2) + 's';
+      wrapper.style.setProperty('--dur', dur);
+      // 內嵌 svg
+      wrapper.innerHTML = strawberrySVG;
+
+      // 小隨機左右搖擺（用 CSS transform 初始位移 + 在動畫中旋轉）
+      wrapper.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
+
+      document.body.appendChild(wrapper);
+      active.add(wrapper);
+
+      // 當動畫結束，做個輕微「落地彈」效果再移除（用 JS）
+      wrapper.addEventListener('animationend', () => {
+        // 輕微縮放與慢淡出，然後移除
+        wrapper.style.transition = 'transform .28s ease, opacity .32s ease';
+        wrapper.style.transform += ' translateY(6px) scale(.92)';
+        wrapper.style.opacity = '0.85';
+        setTimeout(() => {
+          wrapper.remove();
+          active.delete(wrapper);
+        }, 350);
+      }, { once:true });
+    }
+
+    // 自動下草莓雨（開啟/暫停）
+    let spawnInterval = null;
+    function startRain(){
+      if (spawnInterval) clearInterval(spawnInterval);
+      spawnInterval = setInterval(() => {
+        if (raining) makeFallingStrawberry();
+      }, SPAWN_INTERVAL_MS);
+    }
+    function stopRain(){
+      if (spawnInterval) clearInterval(spawnInterval);
+      spawnInterval = null;
+    }
+
+    // 啟動（DOM ready）
+    document.addEventListener('DOMContentLoaded', () => {
+      startRain(); // 自動開始下草莓雨
+    });
+
+    // 按鈕事件：讓「女友」說話（彈出提示）
+    document.getElementById('sayHungry').addEventListener('click', () => {
+      alert('希望倒數完之前整得完 🍓🍰💞');
+    });
+
+    // 暫停 / 繼續草莓雨
+    document.getElementById('toggleRain').addEventListener('click', (e) => {
+      raining = !raining;
+      e.currentTarget.textContent = raining ? '暫停草莓雨' : '繼續草莓雨';
+      // 若已經暫停，也可以把畫面上剩下的草莓慢慢清掉（選擇性）
+      if (!raining){
+        // 清除現有（維持幾顆動畫完畢後自動移除）
+        // optional: 不立即強制刪除，保留逐個落下的效果
+      }
+    });
+
+    // 如果你想在頁面載入時立刻產生幾顆草莓（更密集），取消下面注解
+    // for(let i=0;i<6;i++){ setTimeout(makeFallingStrawberry, i*120); }
+
+    // Expose helper to console (方便你在開發者工具手動調整)
+    window._strawberryHelpers = {
+      makeFallingStrawberry,
+      startRain,
+      stopRain,
+      setDensity(ms){ SPAWN_INTERVAL_MS = ms; stopRain(); startRain(); }
+    };
+  </script>
 </body>
 </html>
